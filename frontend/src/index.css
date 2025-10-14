@@ -1,0 +1,1238 @@
+/* CoreUI CSS */
+@import '@coreui/coreui/dist/css/coreui.min.css';
+
+/* PrimeReact CSS */
+@import 'primereact/resources/themes/lara-light-blue/theme.css';
+@import 'primereact/resources/primereact.min.css';
+@import 'primeicons/primeicons.css';
+
+/* Reset y estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Paleta de colores policial */
+:root {
+  --police-blue: #063971;
+  --police-blue-light: #0a4a8a;
+  --police-blue-dark: #042a4a;
+  --police-green: #008f39;
+  --police-green-light: #00a844;
+  --police-green-dark: #006b2b;
+  --police-yellow: #f7d118;
+  --police-yellow-light: #f9d942;
+  --police-yellow-dark: #d4b00f;
+  --police-gray: #6c757d;
+  --police-gray-light: #adb5bd;
+  --police-gray-dark: #495057;
+  --police-white: #ffffff;
+  --police-light: #f8f9fa;
+  --police-dark: #212529;
+}
+
+body {
+  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--police-light);
+  color: var(--police-dark);
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Utilidades */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.mb-1 {
+  margin-bottom: 8px;
+}
+
+.mb-2 {
+  margin-bottom: 16px;
+}
+
+.mb-3 {
+  margin-bottom: 24px;
+}
+
+.mb-4 {
+  margin-bottom: 32px;
+}
+
+.mt-1 {
+  margin-top: 8px;
+}
+
+.mt-2 {
+  margin-top: 16px;
+}
+
+.mt-3 {
+  margin-top: 24px;
+}
+
+.mt-4 {
+  margin-top: 32px;
+}
+
+.p-1 {
+  padding: 8px;
+}
+
+.p-2 {
+  padding: 16px;
+}
+
+.p-3 {
+  padding: 24px;
+}
+
+.p-4 {
+  padding: 32px;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Layout específico para SICONFLOT */
+.c-app {
+  min-height: 100vh;
+}
+
+.c-default-layout {
+  min-height: 100vh;
+}
+
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Asegurar que el contenido principal no se superponga con el sidebar */
+.c-sidebar-fixed + .wrapper {
+  margin-left: 0;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .c-sidebar-fixed + .wrapper {
+    margin-left: 256px;
+    width: calc(100% - 256px);
+  }
+}
+
+/* Ajustes para el dashboard con paleta policial */
+.dashboard-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0 auto;
+  padding: 0 15px;
+  background: linear-gradient(135deg, var(--police-light) 0%, #ffffff 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(6, 57, 113, 0.1);
+  position: relative;
+}
+
+.dashboard-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--police-blue) 0%, var(--police-green) 50%, var(--police-yellow) 100%);
+  border-radius: 12px 12px 0 0;
+}
+
+/* Asegurar que el contenido del dashboard no se desborde */
+.dashboard-container .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.dashboard-container .col,
+.dashboard-container [class*="col-"] {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* Estilos del body principal */
+.body {
+  background: linear-gradient(135deg, var(--police-light) 0%, #ffffff 100%);
+  position: relative;
+}
+
+.body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(6, 57, 113, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 143, 57, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(247, 209, 24, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Cards del dashboard */
+.dashboard-card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Manejo del sidebar colapsado/expandido */
+.c-sidebar-fixed.c-sidebar-show + .wrapper {
+  margin-left: 256px;
+  width: calc(100% - 256px);
+}
+
+.c-sidebar-fixed:not(.c-sidebar-show) + .wrapper {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* Clases dinámicas para el wrapper */
+.wrapper.sidebar-open {
+  margin-left: 256px;
+  width: calc(100% - 256px);
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.wrapper.sidebar-closed {
+  margin-left: 0;
+  width: 100%;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+  
+  .c-sidebar-fixed + .wrapper,
+  .wrapper.sidebar-open,
+  .wrapper.sidebar-closed {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  
+  .dashboard-container {
+    padding: 0 10px;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* Estilos del sidebar con paleta azul policial */
+.c-sidebar {
+  background: linear-gradient(180deg, var(--police-blue) 0%, var(--police-blue-light) 30%, var(--police-blue-dark) 70%, #0d2a4a 100%);
+  border-right: 3px solid var(--police-yellow);
+  box-shadow: 2px 0 15px rgba(6, 57, 113, 0.5);
+  position: relative;
+}
+
+.c-sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(247, 209, 24, 0.08) 0%, transparent 30%, rgba(10, 74, 138, 0.1) 70%, transparent 100%);
+  pointer-events: none;
+}
+
+.c-sidebar .c-sidebar-brand {
+  background: linear-gradient(135deg, var(--police-blue-dark) 0%, var(--police-blue) 30%, var(--police-blue-light) 70%, #0a4a8a 100%);
+  border-bottom: 3px solid var(--police-yellow);
+  padding: 1.2rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 3px 12px rgba(6, 57, 113, 0.4);
+}
+
+.c-sidebar .c-sidebar-brand::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(247, 209, 24, 0.1) 0%, transparent 50%, rgba(10, 74, 138, 0.15) 100%);
+  pointer-events: none;
+}
+
+.c-sidebar .c-sidebar-brand .sidebar-brand-full {
+  color: var(--police-yellow);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.c-sidebar .c-sidebar-brand .sidebar-brand-narrow {
+  color: var(--police-yellow);
+  font-size: 1.5rem;
+}
+
+.c-sidebar .c-sidebar-nav {
+  padding: 1rem 0;
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-title {
+  color: var(--police-yellow);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.9rem;
+  padding: 1rem 1.5rem 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(247, 209, 24, 0.4);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, rgba(247, 209, 24, 0.1) 0%, transparent 100%);
+  border-radius: 6px;
+  margin: 0.5rem;
+  text-align: center;
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-item {
+  color: var(--police-white);
+  transition: all 0.3s ease;
+  margin: 0.25rem 0.5rem;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(10, 74, 138, 0.3) 0%, rgba(6, 57, 113, 0.2) 100%);
+  border: 1px solid rgba(10, 74, 138, 0.4);
+  backdrop-filter: blur(10px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(247, 209, 24, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-item:hover::before {
+  left: 100%;
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-item:hover {
+  background: linear-gradient(135deg, rgba(10, 74, 138, 0.9) 0%, rgba(6, 57, 113, 0.8) 50%, rgba(0, 143, 57, 0.7) 100%);
+  color: var(--police-white);
+  transform: translateX(5px);
+  box-shadow: 0 6px 20px rgba(6, 57, 113, 0.4);
+  border: 1px solid rgba(247, 209, 24, 0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-item.active {
+  background: linear-gradient(135deg, var(--police-blue-light) 0%, var(--police-blue) 50%, var(--police-green) 100%);
+  color: var(--police-white);
+  border-left: 4px solid var(--police-yellow);
+  box-shadow: 0 6px 25px rgba(6, 57, 113, 0.5);
+  transform: translateX(5px);
+  border: 1px solid rgba(247, 209, 24, 0.6);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-item.active::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid var(--police-yellow);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-item .c-nav-icon {
+  color: var(--police-yellow);
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-item:hover .c-nav-icon {
+  color: var(--police-yellow);
+  transform: scale(1.15);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-item.active .c-nav-icon {
+  color: var(--police-yellow);
+  transform: scale(1.15);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+/* Toggler del sidebar */
+.c-sidebar .c-sidebar-toggler {
+  background: linear-gradient(135deg, var(--police-blue-dark) 0%, var(--police-blue) 50%, #0d2a4a 100%);
+  border-top: 2px solid var(--police-yellow);
+  color: var(--police-yellow);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 -3px 12px rgba(6, 57, 113, 0.4);
+}
+
+.c-sidebar .c-sidebar-toggler:hover {
+  background: linear-gradient(135deg, var(--police-blue-light) 0%, var(--police-blue) 50%, var(--police-green) 100%);
+  color: var(--police-white);
+  transform: translateY(-2px);
+  box-shadow: 0 -4px 15px rgba(6, 57, 113, 0.5);
+}
+
+/* Estilos del header con paleta policial */
+.c-header {
+  background: linear-gradient(90deg, #001a79 0%, var(--police-blue-light) 100%);
+  border-bottom: 2px solid #001c7a;
+  box-shadow: 0 2px 4px rgba(6, 57, 113, 0.1);
+}
+
+/* Alinear el botón-ojito (toggle mask) del Password de PrimeReact */
+.p-password .p-inputtext {
+  display: flex;
+  align-items: center;
+}
+
+.p-password .p-password-toggle-mask {
+  display: flex;
+  align-items: center;
+}
+
+/* Ajuste fino sugerido para alinear iconos dentro de campos PrimeReact */
+.p-icon-field > .p-input-icon {
+  position: absolute;
+  top: 40%;
+  margin-top: -0.5rem;
+}
+
+.c-header .c-header-toggler {
+  color: var(--police-white);
+}
+
+.c-header .c-header-toggler:hover {
+  color: var(--police-yellow);
+}
+
+.c-header .c-navbar {
+  color: var(--police-white);
+}
+
+.c-header .c-dropdown-toggle {
+  color: var(--police-white);
+}
+
+.c-header .c-dropdown-toggle:hover {
+  color: var(--police-yellow);
+}
+
+/* DataTable Vehículos: encabezados azules y filas alternas */
+.vehiculos-table .p-datatable-thead > tr > th {
+  background: #f0f3fa;
+  color: #001a79;
+  font-weight: 600;
+}
+
+.vehiculos-table .row-even {
+  background-color: #ffffff;
+}
+
+.vehiculos-table .row-odd {
+  background-color: #f8faff;
+}
+
+/* Zebra striping y efectos de hover para DataTable de Vehículos */
+.vehiculos-table .p-datatable-tbody > tr:nth-child(odd) {
+  background-color: #f8faff;
+}
+
+.vehiculos-table .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.vehiculos-table .p-datatable-tbody > tr:hover {
+  background-color: #eef3ff;
+}
+
+.vehiculos-table .p-datatable-tbody > tr.p-highlight {
+  background-color: #dce6ff !important;
+  color: #001a79 !important;
+}
+
+/* Estilos de las tarjetas del dashboard con paleta policial */
+.dashboard-card.bg-primary {
+  background: linear-gradient(135deg, var(--police-blue) 0%, var(--police-blue-light) 100%) !important;
+  border: 1px solid var(--police-blue-dark);
+}
+
+.dashboard-card.bg-success {
+  background: linear-gradient(135deg, var(--police-green) 0%, var(--police-green-light) 100%) !important;
+  border: 1px solid var(--police-green-dark);
+}
+
+.dashboard-card.bg-warning {
+  background: linear-gradient(135deg, var(--police-yellow) 0%, var(--police-yellow-light) 100%) !important;
+  border: 1px solid var(--police-yellow-dark);
+  color: var(--police-dark) !important;
+}
+
+.dashboard-card.bg-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+  border: 1px solid #bd2130;
+}
+
+.dashboard-card.bg-info {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+  border: 1px solid #117a8b;
+}
+
+.dashboard-card.bg-secondary {
+  background: linear-gradient(135deg, var(--police-gray) 0%, var(--police-gray-dark) 100%) !important;
+  border: 1px solid var(--police-gray-dark);
+}
+
+.dashboard-card.bg-dark {
+  background: linear-gradient(135deg, var(--police-dark) 0%, #000000 100%) !important;
+  border: 1px solid #000000;
+}
+
+.dashboard-card.bg-light {
+  background: linear-gradient(135deg, var(--police-light) 0%, #e9ecef 100%) !important;
+  border: 1px solid var(--police-gray-light);
+  color: var(--police-dark) !important;
+}
+
+/* Botones con paleta policial */
+.btn-primary {
+  background: linear-gradient(135deg, var(--police-blue) 0%, var(--police-blue-light) 100%);
+  border: 1px solid var(--police-blue-dark);
+  color: var(--police-white);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--police-blue-light) 0%, var(--police-blue) 100%);
+  border: 1px solid var(--police-blue);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--police-green) 0%, var(--police-green-light) 100%);
+  border: 1px solid var(--police-green-dark);
+  color: var(--police-white);
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, var(--police-green-light) 0%, var(--police-green) 100%);
+  border: 1px solid var(--police-green);
+}
+
+/* Efectos adicionales para el sidebar */
+.c-sidebar .c-sidebar-nav .c-nav-item:not(.active):not(:hover) {
+  opacity: 0.9;
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-item:not(.active):not(:hover):hover {
+  opacity: 1;
+}
+
+/* Animación de entrada para los elementos del menú */
+.c-sidebar .c-sidebar-nav .c-nav-item {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Estilos para el scroll del sidebar */
+.c-sidebar .c-sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.c-sidebar .c-sidebar-nav::-webkit-scrollbar-track {
+  background: var(--police-blue-dark);
+}
+
+.c-sidebar .c-sidebar-nav::-webkit-scrollbar-thumb {
+  background: var(--police-yellow);
+  border-radius: 2px;
+}
+
+.c-sidebar .c-sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--police-yellow-light);
+}
+
+/* Efecto de desvanecimiento en los bordes del sidebar */
+.c-sidebar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(transparent, rgba(13, 42, 74, 0.9));
+  pointer-events: none;
+}
+
+/* Efecto de brillo sutil en el sidebar */
+.c-sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(247, 209, 24, 0.05) 0%, transparent 30%, rgba(10, 74, 138, 0.08) 70%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Mejora de la navegación del sidebar */
+.c-sidebar .c-sidebar-nav {
+  position: relative;
+  z-index: 1;
+}
+
+/* Efecto de profundidad en los elementos del menú */
+.c-sidebar .c-sidebar-nav .c-nav-item:not(.active):not(:hover) {
+  opacity: 0.9;
+  background: linear-gradient(135deg, rgba(10, 74, 138, 0.2) 0%, rgba(6, 57, 113, 0.15) 100%);
+  border: 1px solid rgba(10, 74, 138, 0.3);
+}
+
+.c-sidebar .c-sidebar-nav .c-nav-item:not(.active):not(:hover):hover {
+  opacity: 1;
+}
+
+/* Asegurar que no haya scroll horizontal */
+body {
+  overflow-x: hidden;
+}
+
+.c-app {
+  overflow-x: hidden;
+}
+
+/* Estilos para el Accordion del formulario de vehículos */
+.p-accordion .p-accordion-header .p-accordion-header-link {
+  background-color: #001a79 !important;
+  color: white !important;
+  border: 1px solid #001a79 !important;
+  font-weight: bold !important;
+  font-size: 1.1rem !important;
+  padding: 10px !important;
+  min-height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.p-accordion .p-accordion-header .p-accordion-header-link:hover {
+  background-color: #0024a3 !important;
+  color: white !important;
+}
+
+.p-accordion .p-accordion-header .p-accordion-header-link:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 26, 121, 0.25) !important;
+}
+
+.p-accordion .p-accordion-header .p-accordion-header-link .p-accordion-toggle-icon {
+  color: white !important;
+  font-size: 1.2rem !important;
+}
+
+.p-accordion .p-accordion-content {
+  background-color: #f8f9fa !important;
+  border: 1px solid #dee2e6 !important;
+  border-top: none !important;
+  padding: 2rem !important;
+  min-height: 200px !important;
+}
+
+.p-accordion .p-accordion-tab {
+  margin-bottom: 1rem !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Estilos para los campos del formulario */
+.field {
+  margin-bottom: 1.5rem !important;
+}
+
+.field label {
+  color: #495057 !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+}
+
+.p-inputtext, .p-inputnumber-input, .p-dropdown {
+  text-align: center !important;
+  border-radius: 6px !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.9rem !important;
+  border: 1px solid #ced4da !important;
+  transition: all 0.2s ease !important;
+  height: 2.5rem !important;
+  box-sizing: border-box !important;
+}
+
+.p-dropdown {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.p-inputtext:focus, .p-inputnumber-input:focus, .p-dropdown:focus {
+  border-color: #001a79 !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 26, 121, 0.25) !important;
+  outline: none !important;
+}
+
+.p-dropdown .p-dropdown-label {
+  text-align: center !important;
+  padding: 0.5rem 0.75rem !important;
+  height: 2.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.p-dropdown .p-dropdown-trigger {
+  width: 2rem !important;
+  height: 2.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-left: 1px solid #ced4da !important;
+  background: transparent !important;
+}
+
+.p-dropdown .p-dropdown-trigger .p-dropdown-trigger-icon {
+  color: #6c757d !important;
+}
+
+/* Estilos específicos para alineación perfecta de dropdowns */
+.p-dropdown.p-component {
+  display: flex !important;
+  align-items: stretch !important;
+  height: 2.5rem !important;
+  border: 1px solid #ced4da !important;
+  border-radius: 6px !important;
+  background: white !important;
+  overflow: hidden !important;
+}
+
+.p-dropdown.p-component:focus-within {
+  border-color: #001a79 !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 26, 121, 0.25) !important;
+}
+
+.p-dropdown.p-component .p-dropdown-label-container {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+}
+
+.p-dropdown.p-component .p-dropdown-label {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0.5rem 0.75rem !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  color: #495057 !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+}
+
+.p-dropdown.p-component .p-dropdown-label.p-placeholder {
+  color: #6c757d !important;
+}
+
+.p-inputnumber .p-inputnumber-input {
+  padding: 0.5rem 0.75rem !important;
+  height: 2.5rem !important;
+  border: 1px solid #ced4da !important;
+  border-radius: 6px !important;
+  text-align: center !important;
+  font-size: 0.9rem !important;
+  box-sizing: border-box !important;
+}
+
+.p-inputnumber .p-inputnumber-button-group {
+  display: none !important;
+}
+
+/* Estilos específicos para InputNumber */
+.p-inputnumber.p-component {
+  display: flex !important;
+  align-items: center !important;
+  height: 2.5rem !important;
+  border: 1px solid #ced4da !important;
+  border-radius: 6px !important;
+  background: white !important;
+  overflow: hidden !important;
+}
+
+.p-inputnumber.p-component:focus-within {
+  border-color: #001a79 !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 26, 121, 0.25) !important;
+}
+
+.p-inputnumber.p-component .p-inputnumber-input {
+  flex: 1 !important;
+  height: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0.5rem 0.75rem !important;
+  margin: 0 !important;
+}
+
+/* Grid system para el formulario */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -1rem;
+  margin-left: -1rem;
+  gap: 0;
+}
+
+.col-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.col-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.col-4 {
+  flex: 0 0 33.333333%;
+  max-width: 33.333333%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.col-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .col-4, .col-3 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .col-6, .col-4, .col-3 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  
+  .grid {
+    margin-right: -0.5rem;
+    margin-left: -0.5rem;
+  }
+  
+  .col-12, .col-6, .col-4, .col-3 {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+  }
+}
+
+/* Estilos adicionales para el formulario */
+.p-dialog .p-dialog-content {
+  padding: 0 !important;
+}
+
+.p-dialog .p-dialog-header {
+  padding: 1.5rem 2rem !important;
+  border-bottom: 2px solid #001a79 !important;
+}
+
+.p-dialog .p-dialog-footer {
+  padding: 1.5rem 2rem !important;
+  border-top: 2px solid #f0f0f0 !important;
+  background-color: #f8f9fa !important;
+}
+
+/* Estilos específicos para botones del formulario de vehículos */
+.vehiculos-cancel-btn {
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+  font-size: 0.875rem !important;
+  width: 100% !important;
+  white-space: nowrap !important;
+}
+
+.vehiculos-cancel-btn:hover {
+  background-color: #c82333 !important;
+  border-color: #bd2130 !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3) !important;
+}
+
+.vehiculos-cancel-btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.5) !important;
+}
+
+.vehiculos-save-btn {
+  background-color: #28a745 !important;
+  border-color: #28a745 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+  font-size: 0.875rem !important;
+  width: 100% !important;
+  white-space: nowrap !important;
+}
+
+.vehiculos-save-btn:hover {
+  background-color: #218838 !important;
+  border-color: #1e7e34 !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3) !important;
+}
+
+.vehiculos-save-btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5) !important;
+}
+
+.vehiculos-save-btn:disabled {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  color: white !important;
+  opacity: 0.65 !important;
+  cursor: not-allowed !important;
+}
+
+/* Responsive para botones en móviles */
+@media (max-width: 768px) {
+  .vehiculos-cancel-btn,
+  .vehiculos-save-btn {
+    width: 100% !important;
+    margin-bottom: 0.5rem !important;
+  }
+}
+
+/* Estilos para el diálogo de confirmación de eliminación */
+.p-confirm-dialog .p-dialog-header {
+  background-color: #001a79 !important;
+  color: white !important;
+  border-bottom: 2px solid #001a79 !important;
+  padding: 1.5rem !important;
+}
+
+.p-confirm-dialog .p-dialog-title {
+  color: white !important;
+  font-weight: bold !important;
+  font-size: 1.2rem !important;
+}
+
+.p-confirm-dialog .p-dialog-content {
+  padding: 2rem !important;
+  background-color: #f8f9fa !important;
+  border: 1px solid #dee2e6 !important;
+}
+
+.p-confirm-dialog .p-dialog-message {
+  font-size: 1.1rem !important;
+  color: #333 !important;
+  margin-bottom: 1.5rem !important;
+  line-height: 1.5 !important;
+}
+
+.p-confirm-dialog .p-dialog-footer {
+  padding: 1.5rem !important;
+  background-color: #f8f9fa !important;
+  border-top: 1px solid #dee2e6 !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 1rem !important;
+}
+
+.p-confirm-dialog .p-button {
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  font-size: 0.9rem !important;
+  min-width: 120px !important;
+}
+
+.p-confirm-dialog .p-button.p-confirm-dialog-accept {
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+  color: white !important;
+}
+
+.p-confirm-dialog .p-button.p-confirm-dialog-accept:hover {
+  background-color: #c82333 !important;
+  border-color: #bd2130 !important;
+}
+
+.p-confirm-dialog .p-button.p-confirm-dialog-reject {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  color: white !important;
+}
+
+.p-confirm-dialog .p-button.p-confirm-dialog-reject:hover {
+  background-color: #5a6268 !important;
+  border-color: #545b62 !important;
+}
+
+.p-confirm-dialog .p-dialog-icon {
+  color: #dc3545 !important;
+  font-size: 2rem !important;
+  margin-right: 1rem !important;
+}
+
+/* Estilos para la tabla de maestros */
+.maestros-table .p-datatable-thead > tr > th {
+  background-color: #001a79 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-color: #001a79;
+}
+
+.maestros-table .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #f8faff; /* Color para filas pares */
+}
+
+.maestros-table .p-datatable-tbody > tr:nth-child(odd) {
+  background-color: #ffffff; /* Color para filas impares */
+}
+
+.maestros-table .p-datatable-tbody > tr:hover {
+  background-color: #eef3ff !important; /* Color al pasar el mouse */
+  cursor: pointer;
+}
+
+.maestros-table .p-datatable-tbody > tr.p-highlight {
+  background-color: #dce6ff !important; /* Color de fila seleccionada */
+  color: #001a79 !important;
+}
+
+/* Estilos para notificaciones Toast de Maestros */
+.p-toast {
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  z-index: 9999 !important;
+}
+
+.p-toast-message {
+  margin-bottom: 1rem !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border: none !important;
+}
+
+.p-toast-message-success {
+  background-color: #d4edda !important;
+  border-left: 4px solid #28a745 !important;
+}
+
+.p-toast-message-error {
+  background-color: #f8d7da !important;
+  border-left: 4px solid #dc3545 !important;
+}
+
+.p-toast-message-content {
+  padding: 1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.p-toast-message-content i {
+  font-size: 1.2rem !important;
+}
+
+.p-toast-message-success .p-toast-message-content i {
+  color: #28a745 !important;
+}
+
+.p-toast-message-error .p-toast-message-content i {
+  color: #dc3545 !important;
+}
+
+.p-toast-message-content span {
+  font-weight: 500 !important;
+  color: #333 !important;
+}
+
+/* Sidebar fijo sin cambios de tamaño */
+.c-sidebar {
+  width: 250px !important;
+  min-width: 250px !important;
+  max-width: 250px !important;
+  flex-shrink: 0 !important;
+  transition: none !important;
+}
+
+.c-sidebar.c-sidebar-show {
+  width: 250px !important;
+  min-width: 250px !important;
+  max-width: 250px !important;
+}
+
+.c-sidebar.c-sidebar-hide {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+}
+
+/* Prevenir cambios de tamaño en hover */
+.c-sidebar * {
+  box-sizing: border-box !important;
+}
+
+.c-sidebar .c-sidebar-nav {
+  width: 100% !important;
+}
+
+.c-sidebar .c-sidebar-nav .nav-link {
+  width: 100% !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Estilos para el scroll del menú */
+.c-sidebar > div:last-child {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent !important;
+}
+
+.c-sidebar > div:last-child::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.c-sidebar > div:last-child::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.c-sidebar > div:last-child::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  border-radius: 3px !important;
+}
+
+.c-sidebar > div:last-child::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
