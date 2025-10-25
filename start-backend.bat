@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo    SICONFLOT - Iniciar Backend
+echo    SICONVIS - Iniciar Backend
 echo ========================================
 echo.
 

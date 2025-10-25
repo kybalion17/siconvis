@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name' => $_ENV['APP_NAME'] ?? 'SAGAUT Modern',
+    'name' => $_ENV['APP_NAME'] ?? 'SICONVIS',
     'env' => $_ENV['APP_ENV'] ?? 'production',
     'debug' => filter_var($_ENV['APP_DEBUG'] ?? false, FILTER_VALIDATE_BOOLEAN),
     'url' => $_ENV['APP_URL'] ?? 'http://localhost:8000',
@@ -19,7 +19,7 @@ return [
     ],
     
     'upload' => [
-        'path' => $_ENV['UPLOAD_PATH'] ?? '../uploads/',
+        'path' => $_ENV['UPLOAD_PATH'] ?? __DIR__ . '/../uploads/',
         'max_size' => (int)($_ENV['MAX_FILE_SIZE'] ?? 10485760), // 10MB
     ],
     

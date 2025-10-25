@@ -4,27 +4,27 @@ services:
   # Base de datos MySQL
   mysql:
     image: mysql:8.0
-    container_name: siconflot_mysql
+    container_name: siconvis_mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: siconflot
-      MYSQL_USER: siconflot
-      MYSQL_PASSWORD: siconflot123
+      MYSQL_DATABASE: siconvis
+      MYSQL_USER: siconvis
+      MYSQL_PASSWORD: siconvis123
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/migrate.sql:/docker-entrypoint-initdb.d/migrate.sql
     networks:
-      - siconflot_network
+      - siconvis_network
 
   # Backend PHP
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: siconflot_backend
+    container_name: siconvis_backend
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -33,20 +33,20 @@ services:
       - ./backend/uploads:/var/www/html/uploads
     environment:
       - DB_HOST=mysql
-      - DB_DATABASE=siconflot
-      - DB_USERNAME=siconflot
-      - DB_PASSWORD=siconflot123
+      - DB_DATABASE=siconvis
+      - DB_USERNAME=siconvis
+      - DB_PASSWORD=siconvis123
     depends_on:
       - mysql
     networks:
-      - siconflot_network
+      - siconvis_network
 
   # Frontend React
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: siconflot_frontend
+    container_name: siconvis_frontend
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -58,12 +58,12 @@ services:
     depends_on:
       - backend
     networks:
-      - siconflot_network
+      - siconvis_network
 
   # phpMyAdmin para gestión de base de datos
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: siconflot_phpmyadmin
+    container_name: siconvis_phpmyadmin
     restart: unless-stopped
     ports:
       - "8080:80"
@@ -74,11 +74,11 @@ services:
     depends_on:
       - mysql
     networks:
-      - siconflot_network
+      - siconvis_network
 
 volumes:
   mysql_data:
 
 networks:
-  siconflot_network:
+  siconvis_network:
     driver: bridge

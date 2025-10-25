@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "========================================"
-echo "    SICONFLOT - Instalación"
+echo "    SICONVIS - Instalación"
 echo "========================================"
 echo
 
@@ -123,7 +123,7 @@ echo
 echo "[6/6] Configuración completada!"
 echo
 echo "========================================"
-echo "    SAGAUT Modern - Listo para usar"
+echo "    SICONVIS - Listo para usar"
 echo "========================================"
 echo
 echo "Para iniciar el sistema:"

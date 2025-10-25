@@ -117,267 +117,162 @@ class ApiService {
     return this.post('/auth/refresh')
   }
 
-  // Métodos de vehículos
-  async getVehiculos(page: number = 1, perPage: number = 10, filters?: any) {
-    return this.getPaginated('/vehiculos', page, perPage, filters)
+  // Métodos de visitantes
+  async getVisitantes(page: number = 1, perPage: number = 10, filters?: any) {
+    return this.getPaginated('/visitantes', page, perPage, filters)
   }
 
-  async getVehiculo(id: number) {
-    return this.get(`/vehiculos/${id}`)
+  async getVisitante(id: number) {
+    return this.get(`/visitantes/${id}`)
   }
 
-  async createVehiculo(data: any) {
-    return this.post('/vehiculos', data)
+  async createVisitante(data: any) {
+    return this.post('/visitantes', data)
   }
 
-  async updateVehiculo(id: number, data: any) {
-    return this.put(`/vehiculos/${id}`, data)
+  async updateVisitante(id: number, data: any) {
+    return this.put(`/visitantes/${id}`, data)
   }
 
-  async deleteVehiculo(id: number) {
-    return this.delete(`/vehiculos/${id}`)
+  async deleteVisitante(id: number) {
+    return this.delete(`/visitantes/${id}`)
   }
 
-  // Métodos de choferes
-  async getChoferes(page: number = 1, perPage: number = 10, filters?: any) {
-    return this.getPaginated('/choferes', page, perPage, filters)
+  async getVisitanteByCedula(cedula: string) {
+    return this.get('/visitantes/cedula', { cedula })
   }
 
-  async getChofer(id: number) {
-    return this.get(`/choferes/${id}`)
+  async getVisitantesSolicitados() {
+    return this.get('/visitantes/solicitados')
   }
 
-  async createChofer(data: any) {
-    return this.post('/choferes', data)
+  async marcarVisitanteSolicitado(id: number) {
+    return this.post(`/visitantes/${id}/marcarSolicitadoConGuion`)
   }
 
-  async updateChofer(id: number, data: any) {
-    return this.put(`/choferes/${id}`, data)
+  async desmarcarVisitanteSolicitado(id: number) {
+    return this.post(`/visitantes/${id}/desmarcarSolicitadoConGuion`)
   }
 
-  async deleteChofer(id: number) {
-    return this.delete(`/choferes/${id}`)
+  async getVisitantesStats() {
+    return this.get('/visitantes/stats')
   }
 
-  // Métodos de asignaciones
-  async getAsignaciones(page: number = 1, perPage: number = 10, filters?: any) {
-    return this.getPaginated('/asignaciones', page, perPage, filters)
+  // Métodos de departamentos
+  async getDepartamentos(page: number = 1, perPage: number = 10, filters?: any) {
+    return this.getPaginated('/departamentos', page, perPage, filters)
   }
 
-  async getAsignacion(id: number) {
-    return this.get(`/asignaciones/${id}`)
+  async getDepartamento(id: number) {
+    return this.get(`/departamentos/${id}`)
   }
 
-  async createAsignacion(data: any) {
-    return this.post('/asignaciones', data)
+  async createDepartamento(data: any) {
+    return this.post('/departamentos', data)
   }
 
-  async updateAsignacion(id: number, data: any) {
-    return this.put(`/asignaciones/${id}`, data)
+  async updateDepartamento(id: number, data: any) {
+    return this.put(`/departamentos/${id}`, data)
   }
 
-  async deleteAsignacion(id: number) {
-    return this.delete(`/asignaciones/${id}`)
+  async deleteDepartamento(id: number) {
+    return this.delete(`/departamentos/${id}`)
   }
 
-  // Métodos de mantenimientos
-  async getMantenimientos(page: number = 1, perPage: number = 10, filters?: any) {
-    return this.getPaginated('/mantenimientos', page, perPage, filters)
+  async getDepartamentosActivos() {
+    return this.get('/departamentos/activos')
   }
 
-  async getMantenimiento(id: number) {
-    return this.get(`/mantenimientos/${id}`)
+  async activarDepartamento(id: number) {
+    return this.post(`/departamentos/${id}/activar`)
   }
 
-  async createMantenimiento(data: any) {
-    return this.post('/mantenimientos', data)
+  async desactivarDepartamento(id: number) {
+    return this.post(`/departamentos/${id}/desactivar`)
   }
 
-  async updateMantenimiento(id: number, data: any) {
-    return this.put(`/mantenimientos/${id}`, data)
+  async getDepartamentosStats() {
+    return this.get('/departamentos/stats')
   }
 
-  async deleteMantenimiento(id: number) {
-    return this.delete(`/mantenimientos/${id}`)
+  async getDepartamentosMasVisitados(limit: number = 5) {
+    return this.get('/departamentos/mas-visitados', { limit })
   }
 
-  // Métodos de seguros
-  async getSeguros(page: number = 1, perPage: number = 10, filters?: any) {
-    return this.getPaginated('/seguros', page, perPage, filters)
-  }
+        // Métodos de visitas
+        async getVisitas(page: number = 1, perPage: number = 10, filters?: any) {
+          return this.getPaginated('/visitas', page, perPage, filters)
+        }
 
-  async getSeguro(id: number) {
-    return this.get(`/seguros/${id}`)
-  }
+        async getVisita(id: number) {
+          return this.get(`/visitas/${id}`)
+        }
 
-  async createSeguro(data: any) {
-    return this.post('/seguros', data)
-  }
+        async createVisita(data: any) {
+          return this.post('/visitas', data)
+        }
 
-  async updateSeguro(id: number, data: any) {
-    return this.put(`/seguros/${id}`, data)
-  }
+        async updateVisita(id: number, data: any) {
+          return this.put(`/visitas/${id}`, data)
+        }
 
-  async deleteSeguro(id: number) {
-    return this.delete(`/seguros/${id}`)
-  }
+        async deleteVisita(id: number) {
+          return this.delete(`/visitas/${id}`)
+        }
 
-  // Métodos de siniestros
-  async getSiniestros(page: number = 1, perPage: number = 10, filters?: any) {
-    return this.getPaginated('/siniestros', page, perPage, filters)
-  }
+        async finalizarVisita(id: number, observaciones?: string) {
+          return this.post(`/visitas/${id}/finalizar`, { observaciones })
+        }
 
-  async getSiniestro(id: number) {
-    return this.get(`/siniestros/${id}`)
-  }
+        async cancelarVisita(id: number, observaciones?: string) {
+          return this.post(`/visitas/${id}/cancelar`, { observaciones })
+        }
 
-  async createSiniestro(data: any) {
-    return this.post('/siniestros', data)
-  }
+        async getVisitasActivas() {
+          return this.get('/visitas/activas')
+        }
 
-  async updateSiniestro(id: number, data: any) {
-    return this.put(`/siniestros/${id}`, data)
-  }
+        async getVisitasHoy() {
+          return this.get('/visitas/hoy')
+        }
 
-  async deleteSiniestro(id: number) {
-    return this.delete(`/siniestros/${id}`)
-  }
+        async getVisitasStats(filters?: any) {
+          return this.get('/visitas/stats', { params: filters })
+        }
 
-  // Métodos de dashboard
-  async getDashboardStats() {
-    return this.get('/dashboard/stats')
-  }
+        // Métodos de configuración
+        async getConfiguraciones() {
+          return this.get('/configuracion')
+        }
 
-  async getDashboardReports() {
-    return this.get('/dashboard/reports')
-  }
+        async getConfiguracion(id: number) {
+          return this.get(`/configuracion/${id}`)
+        }
 
-  // Métodos de maestros
-  async getClases() {
-    return this.get('/maestros/clases')
-  }
+        async createConfiguracion(data: any) {
+          return this.post('/configuracion', data)
+        }
 
-  async getMarcas() {
-    return this.get('/maestros/marcas')
-  }
+        async updateConfiguracion(id: number, data: any) {
+          return this.put(`/configuracion/${id}`, data)
+        }
 
-  async getModelos(marcaId?: number) {
-    return this.get('/maestros/modelos', { marca_id: marcaId })
-  }
+        async deleteConfiguracion(id: number) {
+          return this.delete(`/configuracion/${id}`)
+        }
 
-  async getColores() {
-    return this.get('/maestros/colores')
-  }
+        // Métodos de dashboard
+        async getDashboardStats() {
+          return this.get('/dashboard/stats')
+        }
 
-  async getCombustibles() {
-    return this.get('/maestros/combustibles')
-  }
+        async getDashboardReports(filters?: any) {
+          return this.get('/dashboard/reports', { params: filters })
+        }
 
-  async getTransmisiones() {
-    return this.get('/maestros/transmisiones')
-  }
-
-  async getAsientos() {
-    return this.get('/maestros/asientos')
-  }
-
-  async getUnidadesPeso() {
-    return this.get('/maestros/unidadesPeso')
-  }
-
-  async getOrganismos() {
-    return this.get('/maestros/organismos')
-  }
-
-  async getTalleres() {
-    return this.get('/maestros/talleres')
-  }
-
-  async getAseguradoras() {
-    return this.get('/maestros/aseguradoras')
-  }
-
-  async getTiposMantenimiento() {
-    return this.get('/maestros/tiposMantenimiento')
-  }
-
-  async getSexos() {
-    return this.get('/maestros/sexos')
-  }
-
-  async getLicencias() {
-    return this.get('/maestros/licencias')
-  }
-
+  // Métodos de maestros (solo los necesarios para el sistema de visitas)
   async getPerfiles() {
     return this.get('/maestros/perfiles')
-  }
-
-  // Métodos de documentos
-  async getDocumentos(page: number = 1, perPage: number = 10, filters?: any) {
-    return this.getPaginated('/documentos', page, perPage, filters)
-  }
-
-  async getDocumento(id: number) {
-    return this.get(`/documentos/${id}`)
-  }
-
-  async createDocumento(data: any) {
-    const form = new FormData()
-    Object.keys(data).forEach((key) => {
-      if (data[key] !== undefined && data[key] !== null) {
-        form.append(key, data[key])
-      }
-    })
-    // Nota: axios establecerá 'multipart/form-data' automáticamente con FormData
-    const response = await this.api.post('/documentos', form)
-    return response.data
-  }
-
-  async updateDocumento(id: number, data: any) {
-    return this.put(`/documentos/${id}`, data)
-  }
-
-  async deleteDocumento(id: number) {
-    return this.delete(`/documentos/${id}`)
-  }
-
-  async downloadDocumento(id: number) {
-    const response = await this.api.get(`/documentos/${id}/download`, { responseType: 'blob' })
-    return response.data
-  }
-
-  async viewDocumento(id: number) {
-    const response = await this.api.get(`/documentos/${id}/view`, { responseType: 'blob' })
-    return response.data
-  }
-
-  async getDocumentosPorEntidad(entidadTipo: string, entidadId: number) {
-    return this.get(`/documentos/entidad/${entidadTipo}/${entidadId}`)
-  }
-
-  async getDocumentosPorVencer(dias: number = 30) {
-    return this.get('/documentos/por-vencer', { dias })
-  }
-
-  async getDocumentosVencidos() {
-    return this.get('/documentos/vencidos')
-  }
-
-  async buscarDocumentos(q: string) {
-    return this.get('/documentos/buscar', { q })
-  }
-
-  async getDocumentosPorCategoria(categoria: string) {
-    return this.get(`/documentos/categoria/${categoria}`)
-  }
-
-  async getDocumentosRecientes(limit: number = 10) {
-    return this.get('/documentos/recientes', { limit })
-  }
-
-  async getDocumentosInfo() {
-    return this.get('/documentos/info')
   }
 
   // Métodos CRUD para tablas maestras
@@ -407,6 +302,43 @@ class ApiService {
 
   async getMaestroStats(table: string) {
     return this.get(`/maestro/${table}/stats`)
+  }
+
+  // Métodos de upload de archivos
+    async uploadVisitorPhoto(file: File, customName?: string) {
+        const formData = new FormData()
+        formData.append('photo', file)
+        if (customName) {
+            formData.append('custom_name', customName)
+        }
+        
+        const response = await this.api.post('/upload/uploadVisitorPhoto', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+        return response.data
+    }
+
+  async uploadImage(file: File, subfolder: string = 'general') {
+    const formData = new FormData()
+    formData.append('image', file)
+    formData.append('subfolder', subfolder)
+    
+    const response = await this.api.post('/upload/uploadImage', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return response.data
+  }
+
+  async deleteFile(filename: string, subfolder: string = 'general') {
+    return this.post('/upload/deleteFile', { filename, subfolder })
+  }
+
+  async getFileInfo(filename: string, subfolder: string = 'general') {
+    return this.get('/upload/getFileInfo', { filename, subfolder })
   }
 }
 

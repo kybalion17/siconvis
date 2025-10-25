@@ -1,0 +1,23 @@
+# Permitir acceso a archivos de imagen
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Headers de seguridad para imágenes
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+    Header set Cache-Control "public, max-age=31536000"
+    Header set X-Content-Type-Options nosniff
+</FilesMatch>
+
+# Prevenir ejecución de scripts en este directorio
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Configuración de tipos MIME
+AddType image/jpeg .jpg .jpeg
+AddType image/png .png
+AddType image/gif .gif
+AddType image/webp .webp

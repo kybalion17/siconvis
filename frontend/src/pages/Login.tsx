@@ -83,19 +83,19 @@ const Login: React.FC = () => {
               >
                 <div className="mb-4">
                   <CIcon
-                    icon="cil-car"
+                    icon="cil-user"
                     size="3xl"
                     style={{ fontSize: '4rem' }}
                   />
                 </div>
                 <CCardTitle className="h4 mb-3" style={{ lineHeight: '1.2', letterSpacing: '0.5px' }}>
-                  SICONFLOT
+                  SICONVIS
                 </CCardTitle>
 				
 				<div className="mb-3"> 
 					<img
-						src="/bannerSiconflot.png"
-						alt="SICONFLOT"
+						src="/bannerSiconvis.png"
+						alt="SICONVIS"
 						className="img-fluid d-block mx-auto"
 						style={{ 
 							maxWidth: '260px',
@@ -114,7 +114,7 @@ const Login: React.FC = () => {
                 }}>
 						
 				
-                  Sistema de Control de Flota Vehicular
+                  Sistema de Control de Visitantes
                 </p>
               </CCardHeader>
 
@@ -253,7 +253,7 @@ const Login: React.FC = () => {
         style={{ color: 'rgba(255,255,255,0.8)' }}
       >
         <small>
-          © 2024 SICONFLOT - Sistema de Control de Flota Vehicular
+          © 2024 SICONVIS - Sistema de Control de Visitantes
         </small>
       </div>
     </div>

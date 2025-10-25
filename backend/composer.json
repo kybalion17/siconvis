@@ -1,6 +1,6 @@
 {
-    "name": "siconflot/backend",
-    "description": "SICONFLOT - Sistema Control de Flota",
+    "name": "siconvis/backend",
+    "description": "SICONVIS - Sistema de Control de Visitantes",
     "type": "project",
     "require": {
         "php": ">=8.1",

@@ -279,32 +279,13 @@ class MaestroController
     }
 
     /**
-     * Obtener lista de tablas maestras permitidas
+     * Obtener lista de tablas maestras permitidas (solo las necesarias para visitas)
      */
     private function getAllowedTables()
     {
         return [
-            'trmaaseguradoras',
-            'trmaasientos',
-            'trmaclase',
-            'trmacolor',
-            'trmacombustible',
-            'trmalicencia',
-            'trmamarca',
-            'trmamodelo',
-            'trmaorganismos',
             'trmaperfil',
-            'trmasexo',
-            'trmatalleres',
-            'trmatipomantenimiento',
-            'trmatransmision',
-            'trmaunidad_peso',
-            'trmadocumentos',
-            'trmaitems_mantenimiento',
-            'trmaitems_verificacion',
-            'trmaletra_rif',
-            'trmadepartamentos',
-            'trmadirecciones'
+            'trmadepartamentos'
         ];
     }
 
@@ -314,27 +295,8 @@ class MaestroController
     private function getRequiredFields($table)
     {
         $requiredFields = [
-            'trmaaseguradoras' => ['nombre', 'rif_completo'],
-            'trmaasientos' => ['nombre'],
-            'trmaclase' => ['nombre'],
-            'trmacolor' => ['nombre'],
-            'trmacombustible' => ['nombre'],
-            'trmalicencia' => ['nombre'],
-            'trmamarca' => ['marca'],
-            'trmamodelo' => ['modelo', 'marca_id'],
-            'trmaorganismos' => ['nombre'],
             'trmaperfil' => ['nombre'],
-            'trmasexo' => ['nombre'],
-            'trmatalleres' => ['nombre'],
-            'trmatipomantenimiento' => ['nombre'],
-            'trmatransmision' => ['nombre'],
-            'trmaunidadpeso' => ['nombre'],
-            'trmadocumentos' => ['nombre'],
-            'trmaitems_mantenimiento' => ['nombre'],
-            'trmaitems_verificacion' => ['nombre', 'tipo_item'],
-            'trmaletra_rif' => ['nombre'],
-            'trmadepartamentos' => ['nombre'],
-            'trmadirecciones' => ['nombre']
+            'trmadepartamentos' => ['nombre']
         ];
 
         return $requiredFields[$table] ?? ['nombre'];
@@ -392,12 +354,7 @@ class MaestroController
     private function getNameColumn($table)
     {
         $nameColumns = [
-            'trmamarca' => 'nombre',
-            'trmamodelo' => 'nombre',
-            'trmaaseguradoras' => 'nombre',
-            'trmatalleres' => 'nombre',
-            'trmadepartamentos' => 'nombre',
-            'trmadirecciones' => 'nombre'
+            'trmadepartamentos' => 'nombre'
         ];
 
         return $nameColumns[$table] ?? 'nombre';
@@ -432,90 +389,6 @@ class MaestroController
     }
 
     // Métodos específicos para compatibilidad con rutas existentes
-    public function clases()
-    {
-        return $this->getOptions('trmaclase');
-    }
-
-    public function marcas()
-    {
-        return $this->getOptions('trmamarca');
-    }
-
-    public function modelos()
-    {
-        $marcaId = $_GET['marca_id'] ?? null;
-        if ($marcaId) {
-            $sql = "SELECT id, nombre  FROM trmamodelo WHERE id_marca = :marca_id ORDER BY nombre";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindValue(':marca_id', $marcaId, \PDO::PARAM_INT);
-            $stmt->execute();
-            $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            return $this->response->success($data);
-        }
-        return $this->getOptions('trmamodelo');
-    }
-
-    public function colores()
-    {
-        return $this->getOptions('trmacolor');
-    }
-
-    public function combustibles()
-    {
-        return $this->getOptions('trmacombustible');
-    }
-
-    public function transmisiones()
-    {
-        return $this->getOptions('trmatransmision');
-    }
-
-    public function asientos()
-    {
-        return $this->getOptions('trmaasientos');
-    }
-
-    public function unidadesPeso()
-    {
-        return $this->getOptions('trmaunidad_peso');
-    }
-
-    public function choferes()
-    {
-        return $this->getOptions('trmachoferes');
-    }
-
-    public function organismos()
-    {
-        return $this->getOptions('trmaorganismos');
-    }
-
-    public function talleres()
-    {
-        return $this->getOptions('trmatalleres');
-    }
-
-    public function aseguradoras()
-    {
-        return $this->getOptions('trmaaseguradoras');
-    }
-
-    public function tiposMantenimiento()
-    {
-        return $this->getOptions('trmatipomantenimiento');
-    }
-
-    public function sexos()
-    {
-        return $this->getOptions('trmasexo');
-    }
-
-    public function licencias()
-    {
-        return $this->getOptions('trmalicencia');
-    }
-
     public function perfiles()
     {
         return $this->getOptions('trmaperfil');

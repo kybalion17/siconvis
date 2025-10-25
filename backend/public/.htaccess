@@ -1,6 +1,10 @@
 RewriteEngine On
 
-# Redirigir todas las peticiones a index.php
+# Redirigir peticiones de uploads al servidor PHP
+RewriteCond %{REQUEST_URI} ^/uploads/(.*)$
+RewriteRule ^uploads/(.*)$ uploads.php [QSA,L]
+
+# Redirigir todas las demás peticiones a index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]

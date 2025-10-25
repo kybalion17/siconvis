@@ -1,10 +1,10 @@
 @echo off
 echo ========================================
-echo    SICONFLOT - Sistema Control de Flota
+echo    SICONVIS - Sistema Control de Visitantes
 echo ========================================
 echo.
 
-echo Iniciando SICONFLOT...
+echo Iniciando SICONVIS...
 echo.
 
 REM Verificar si PHP esta disponible
@@ -29,24 +29,24 @@ echo ✓ PHP y Node.js encontrados
 echo.
 
 echo Iniciando backend en puerto 8000...
-start "SICONFLOT Backend" cmd /k "cd /d %~dp0backend && php -S localhost:8000 -t public"
+start "SICONVIS Backend" cmd /k "cd /d %~dp0backend && php -S localhost:8000 -t public"
 
 echo Esperando 3 segundos para que el backend inicie...
 timeout /t 3 /nobreak >nul
 
 echo Iniciando frontend en puerto 3000...
-start "SICONFLOT Frontend" cmd /k "cd /d %~dp0frontend && npm run dev"
+start "SICONVIS Frontend" cmd /k "cd /d %~dp0frontend && npm run dev"
 
 echo.
 echo ========================================
-echo    SICONFLOT INICIADO EXITOSAMENTE
+echo    SICONVIS INICIADO EXITOSAMENTE
 echo ========================================
 echo.
 echo Backend:  http://localhost:8000
 echo Frontend: http://localhost:3000
 echo.
 echo Credenciales por defecto:
-echo Usuario: admin@siconflot.com
+echo Usuario: admin@siconvis.com
 echo Contraseña: admin123
 echo.
 echo Presiona cualquier tecla para cerrar esta ventana...

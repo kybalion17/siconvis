@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo    SICONFLOT - Instalacion Windows
+echo    SICONVIS - Instalacion Windows
 echo ========================================
 echo.
 
@@ -141,11 +141,11 @@ echo.
 echo IMPORTANTE: Necesitas configurar la base de datos manualmente
 echo.
 echo 1. Abre phpMyAdmin o tu cliente MySQL preferido
-echo 2. Crea una base de datos llamada 'siconflot'
+echo 2. Crea una base de datos llamada 'siconvis'
 echo 3. Importa el archivo: database\migrate.sql
 echo 4. Configura las credenciales en: backend\.env
 echo.
-echo Base de datos: siconflot
+echo Base de datos: siconvis
 echo Usuario: root (o el que prefieras)
 echo Contraseña: (la que uses en tu MySQL)
 echo.
@@ -176,12 +176,12 @@ echo ========================================
 echo    INSTALACION COMPLETADA
 echo ========================================
 echo.
-echo SICONFLOT ha sido instalado exitosamente!
+echo SICONVIS ha sido instalado exitosamente!
 echo.
 echo PRÓXIMOS PASOS:
 echo.
 echo 1. Configura la base de datos MySQL:
-echo    - Crea la base de datos 'siconflot'
+echo    - Crea la base de datos 'siconvis'
 echo    - Importa database\migrate.sql
 echo    - Actualiza backend\.env con tus credenciales
 echo.
@@ -197,7 +197,7 @@ echo 4. Abre tu navegador en:
 echo    http://localhost:3000
 echo.
 echo CREDENCIALES POR DEFECTO:
-echo Usuario: admin@siconflot.com
+echo Usuario: admin@siconvis.com
 echo Contraseña: admin123
 echo.
 echo ========================================

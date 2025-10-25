@@ -57,8 +57,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <CSidebarBrand className="d-none d-md-flex">
           <div className="w-100 d-flex flex-column align-items-center">
             <img 
-              src="/bannerSiconflot.png"
-              alt="SICONFLOT"
+              src="/bannerSiconvis.png"
+              alt="SICONVIS"
               style={{
                 width: '100%',
                 maxHeight: '100px',
@@ -81,76 +81,49 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </CNavItem>
           <CNavItem>
             <CNavLink 
-              onClick={() => handleNavigation('/vehiculos')}
-              className={location.pathname === '/vehiculos' ? 'active' : ''}
-            >
-              <CIcon icon="cil-car" customClassName="nav-icon" />
-              Vehículos
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink 
-              onClick={() => handleNavigation('/choferes')}
-              className={location.pathname === '/choferes' ? 'active' : ''}
+              onClick={() => handleNavigation('/visitantes')}
+              className={location.pathname === '/visitantes' ? 'active' : ''}
             >
               <CIcon icon="cil-user" customClassName="nav-icon" />
-              Choferes
+              Visitantes
             </CNavLink>
           </CNavItem>
           <CNavItem>
             <CNavLink 
-              onClick={() => handleNavigation('/asignaciones')}
-              className={location.pathname === '/asignaciones' ? 'active' : ''}
+              onClick={() => handleNavigation('/departamentos')}
+              className={location.pathname === '/departamentos' ? 'active' : ''}
+            >
+              <CIcon icon="cil-building" customClassName="nav-icon" />
+              Departamentos
+            </CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink 
+              onClick={() => handleNavigation('/visitas')}
+              className={location.pathname === '/visitas' ? 'active' : ''}
             >
               <CIcon icon="cil-calendar" customClassName="nav-icon" />
-              Asignaciones
+              Registro de Visitas
             </CNavLink>
           </CNavItem>
           <CNavItem>
             <CNavLink 
-              onClick={() => handleNavigation('/mantenimientos')}
-              className={location.pathname === '/mantenimientos' ? 'active' : ''}
+              onClick={() => handleNavigation('/reportes')}
+              className={location.pathname === '/reportes' ? 'active' : ''}
             >
-              <CIcon icon="cil-wrench" customClassName="nav-icon" />
-              Mantenimientos
+              <CIcon icon="cil-chart" customClassName="nav-icon" />
+              Reportes
             </CNavLink>
           </CNavItem>
           <CNavItem>
             <CNavLink 
-              onClick={() => handleNavigation('/seguros')}
-              className={location.pathname === '/seguros' ? 'active' : ''}
-            >
-              <CIcon icon="cil-shield" customClassName="nav-icon" />
-              Seguros
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink 
-              onClick={() => handleNavigation('/siniestros')}
-              className={location.pathname === '/siniestros' ? 'active' : ''}
-            >
-              <CIcon icon="cil-warning" customClassName="nav-icon" />
-              Siniestros
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink 
-              onClick={() => handleNavigation('/documentos')}
-              className={location.pathname === '/documentos' ? 'active' : ''}
-            >
-              <CIcon icon="cil-file" customClassName="nav-icon" />
-              Documentos
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink 
-              onClick={() => handleNavigation('/maestros')}
-              className={location.pathname === '/maestros' ? 'active' : ''}
+              onClick={() => handleNavigation('/configuracion')}
+              className={location.pathname === '/configuracion' ? 'active' : ''}
             >
               <CIcon icon="cil-settings" customClassName="nav-icon" />
-              Maestros
+              Configuración
             </CNavLink>
-            </CNavItem>
+          </CNavItem>
         </CSidebarNav>
         <CSidebarToggler />
       </CSidebar>

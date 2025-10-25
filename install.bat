@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo    SICONFLOT - Instalacion
+echo    SICONVIS - Instalacion
 echo ========================================
 echo.
 
@@ -106,7 +106,7 @@ echo.
 echo [6/6] Configuracion completada!
 echo.
 echo ========================================
-echo    SAGAUT Modern - Listo para usar
+echo    SICONVIS - Listo para usar
 echo ========================================
 echo.
 echo Para iniciar el sistema:

@@ -6,8 +6,10 @@ class Response
 {
     public static function success($data = null, string $message = 'Operación exitosa', int $code = 200): void
     {
-        http_response_code($code);
-        header('Content-Type: application/json');
+        if (!headers_sent()) {
+            http_response_code($code);
+            header('Content-Type: application/json');
+        }
         
         $response = [
             'success' => true,
@@ -25,8 +27,10 @@ class Response
 
     public static function error(string $message = 'Error en la operación', int $code = 400, $errors = null): void
     {
-        http_response_code($code);
-        header('Content-Type: application/json');
+        if (!headers_sent()) {
+            http_response_code($code);
+            header('Content-Type: application/json');
+        }
         
         $response = [
             'success' => false,
@@ -85,8 +89,10 @@ class Response
             ]
         ];
 
-        http_response_code(200);
-        header('Content-Type: application/json');
+        if (!headers_sent()) {
+            http_response_code(200);
+            header('Content-Type: application/json');
+        }
         echo json_encode($response, JSON_UNESCAPED_UNICODE);
         exit;
     }

@@ -13,19 +13,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { useAuth } from '../hooks/useAuth'
 import api from '../services/api'
-
-interface DashboardStats {
-  total_vehiculos: number
-  vehiculos_activos: number
-  vehiculos_mantenimiento: number
-  vehiculos_siniestrados: number
-  total_choferes: number
-  choferes_activos: number
-  asignaciones_activas: number
-  mantenimientos_pendientes: number
-  seguros_por_vencer: number
-  siniestros_abiertos: number
-}
+import { DashboardStats } from '../types'
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth()
@@ -75,7 +63,7 @@ const Dashboard: React.FC = () => {
       <div className="mb-4">
         <img
           src="/logo_header.jpg"
-          alt="SICONFLOT"
+          alt="SICONVIS"
           style={{
             width: '100%',
             maxHeight: '220px',
@@ -102,11 +90,11 @@ const Dashboard: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">{stats?.total_vehiculos || 0}</h4>
-                  <p className="mb-0">Total Vehículos</p>
+                  <h4 className="mb-0">{stats?.total_visitantes || 0}</h4>
+                  <p className="mb-0">Total Visitantes</p>
                 </div>
                 <div className="align-self-center">
-                  <CIcon icon="cil-car" size="2xl" style={{ color: 'var(--police-yellow)' }} />
+                  <CIcon icon="cil-user" size="2xl" style={{ color: 'var(--police-yellow)' }} />
                 </div>
               </div>
             </CCardBody>
@@ -117,11 +105,11 @@ const Dashboard: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">{stats?.vehiculos_activos || 0}</h4>
-                  <p className="mb-0">Vehículos Activos</p>
+                  <h4 className="mb-0">{stats?.visitas_hoy || 0}</h4>
+                  <p className="mb-0">Visitas Hoy</p>
                 </div>
                 <div className="align-self-center">
-                  <CIcon icon="cil-speedometer" size="2xl" style={{ color: 'var(--police-yellow)' }} />
+                  <CIcon icon="cil-calendar" size="2xl" style={{ color: 'var(--police-yellow)' }} />
                 </div>
               </div>
             </CCardBody>
@@ -132,11 +120,11 @@ const Dashboard: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">{stats?.mantenimientos_pendientes || 0}</h4>
-                  <p className="mb-0">Mantenimientos Pendientes</p>
+                  <h4 className="mb-0">{stats?.visitantes_solicitados || 0}</h4>
+                  <p className="mb-0">Visitantes Solicitados</p>
                 </div>
                 <div className="align-self-center">
-                  <CIcon icon="cil-wrench" size="2xl" style={{ color: 'var(--police-blue)' }} />
+                  <CIcon icon="cil-check" size="2xl" style={{ color: 'var(--police-blue)' }} />
                 </div>
               </div>
             </CCardBody>
@@ -147,11 +135,11 @@ const Dashboard: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">{stats?.siniestros_abiertos || 0}</h4>
-                  <p className="mb-0">Siniestros Abiertos</p>
+                  <h4 className="mb-0">{stats?.visitas_activas || 0}</h4>
+                  <p className="mb-0">Visitas Activas</p>
                 </div>
                 <div className="align-self-center">
-                  <CIcon icon="cil-warning" size="2xl" style={{ color: 'var(--police-yellow)' }} />
+                  <CIcon icon="cil-clock" size="2xl" style={{ color: 'var(--police-yellow)' }} />
                 </div>
               </div>
             </CCardBody>
@@ -166,11 +154,11 @@ const Dashboard: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">{stats?.total_choferes || 0}</h4>
-                  <p className="mb-0">Total Choferes</p>
+                  <h4 className="mb-0">{stats?.total_departamentos || 0}</h4>
+                  <p className="mb-0">Total Departamentos</p>
                 </div>
                 <div className="align-self-center">
-                  <CIcon icon="cil-user" size="2xl" style={{ color: 'var(--police-yellow)' }} />
+                  <CIcon icon="cil-building" size="2xl" style={{ color: 'var(--police-yellow)' }} />
                 </div>
               </div>
             </CCardBody>
@@ -181,11 +169,11 @@ const Dashboard: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">{stats?.asignaciones_activas || 0}</h4>
-                  <p className="mb-0">Asignaciones Activas</p>
+                  <h4 className="mb-0">{stats?.departamentos_activos || 0}</h4>
+                  <p className="mb-0">Departamentos Activos</p>
                 </div>
                 <div className="align-self-center">
-                  <CIcon icon="cil-assignment" size="2xl" style={{ color: 'var(--police-yellow)' }} />
+                  <CIcon icon="cil-check-circle" size="2xl" style={{ color: 'var(--police-yellow)' }} />
                 </div>
               </div>
             </CCardBody>
@@ -196,11 +184,11 @@ const Dashboard: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">{stats?.seguros_por_vencer || 0}</h4>
-                  <p className="mb-0">Seguros por Vencer</p>
+                  <h4 className="mb-0">{stats?.visitantes_pendientes || 0}</h4>
+                  <p className="mb-0">Visitantes Pendientes</p>
                 </div>
                 <div className="align-self-center">
-                  <CIcon icon="cil-shield" size="2xl" style={{ color: 'var(--police-yellow)' }} />
+                  <CIcon icon="cil-time" size="2xl" style={{ color: 'var(--police-yellow)' }} />
                 </div>
               </div>
             </CCardBody>
@@ -211,11 +199,11 @@ const Dashboard: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">{stats?.vehiculos_mantenimiento || 0}</h4>
-                  <p className="mb-0">En Mantenimiento</p>
+                  <h4 className="mb-0">{stats?.departamentos_inactivos || 0}</h4>
+                  <p className="mb-0">Departamentos Inactivos</p>
                 </div>
                 <div className="align-self-center">
-                  <CIcon icon="cil-wrench" size="2xl" style={{ color: 'var(--police-blue)' }} />
+                  <CIcon icon="cil-x-circle" size="2xl" style={{ color: 'var(--police-blue)' }} />
                 </div>
               </div>
             </CCardBody>
@@ -237,15 +225,15 @@ const Dashboard: React.FC = () => {
             }}>
               <CCardTitle className="mb-0 d-flex align-items-center">
                 <CIcon icon="cil-shield" className="me-2" style={{ color: 'var(--police-blue)' }} />
-                Bienvenido al Sistema SICONFLOT
+                Bienvenido al Sistema SICONVIS
               </CCardTitle>
             </CCardHeader>
             <CCardBody>
               <p className="mb-3">
-                Hola <strong style={{ color: 'var(--police-blue)' }}>{user?.nombre} {user?.apellido}</strong>, bienvenido al Sistema de Control de Flota Vehicular SICONFLOT.
+                Hola <strong style={{ color: 'var(--police-blue)' }}>{user?.nombre} {user?.apellido}</strong>, bienvenido al Sistema de Control de Visitas SICONVIS.
               </p>
               <p className="mb-0" style={{ color: 'var(--police-gray-dark)' }}>
-                Desde aquí puedes gestionar todos los aspectos de la flota vehicular de la <strong>Policía Municipal de Baruta</strong>.
+                Desde aquí puedes gestionar el control de visitantes y departamentos de la <strong>Policía Municipal de Baruta</strong>.
               </p>
             </CCardBody>
           </CCard>

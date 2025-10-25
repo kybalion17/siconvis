@@ -26,7 +26,7 @@ class User extends BaseModel
 
     public function authenticate(string $login, string $password): ?array
     {
-        $sql = "SELECT * FROM {$this->table} WHERE login = ? AND status = 0";
+        $sql = "SELECT * FROM {$this->table} WHERE login = ? AND status = 0 AND eliminado = 0";
         $user = Database::fetchOne($sql, [$login]);
 
         if (!$user) {

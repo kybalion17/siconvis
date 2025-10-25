@@ -1,6 +1,6 @@
-# 🚗 SICONFLOT - Sistema Control de Flota
+# 👥 SICONVIS - Sistema de Control de Visitantes
 
-Sistema moderno de control de flota vehicular desarrollado con PHP backend y React frontend, basado en el sistema SAGAUT original.
+Sistema moderno de control de visitantes desarrollado con PHP backend y React frontend, basado en el sistema SAGAUT original.
 
 ## 🚀 Características Principales
 
@@ -10,14 +10,14 @@ Sistema moderno de control de flota vehicular desarrollado con PHP backend y Rea
 - **Autenticación JWT** segura
 - **APIs RESTful** bien documentadas
 - **Dashboard interactivo** con métricas
-- **Gestión completa** de vehículos, choferes y asignaciones
-- **Sistema de mantenimiento** y seguros
+- **Gestión completa** de visitantes y departamentos
+- **Sistema de registro** de visitas
 - **Reportes avanzados** y análisis
 
 ## 📁 Estructura del Proyecto
 
 ```
-SICONFLOT/
+SICONVIS/
 ├── backend/                 # API PHP
 │   ├── app/
 │   │   ├── Controllers/     # Controladores API
@@ -55,7 +55,7 @@ SICONFLOT/
 1. **Clonar el repositorio**
    ```bash
    git clone <repository-url>
-   cd SICONFLOT/backend
+   cd SICONVIS/backend
    ```
 
 2. **Instalar dependencias**
@@ -104,7 +104,7 @@ SICONFLOT/
 
 ```env
 # Aplicación
-APP_NAME="SAGAUT Modern"
+APP_NAME="SICONVIS"
 APP_ENV=development
 APP_DEBUG=true
 APP_URL=http://localhost:8000
@@ -113,7 +113,7 @@ APP_URL=http://localhost:8000
 DB_CONNECTION=mysql
 DB_HOST=localhost
 DB_PORT=3306
-DB_DATABASE=sagaut_modern
+DB_DATABASE=siconvis
 DB_USERNAME=root
 DB_PASSWORD=
 
@@ -134,72 +134,73 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 - `GET /auth/me` - Obtener usuario actual
 - `POST /auth/refresh` - Renovar token
 
-### Vehículos
-- `GET /vehiculos` - Listar vehículos
-- `GET /vehiculos/{id}` - Obtener vehículo
-- `POST /vehiculos` - Crear vehículo
-- `PUT /vehiculos/{id}` - Actualizar vehículo
-- `DELETE /vehiculos/{id}` - Eliminar vehículo
+### Visitantes
+- `GET /visitantes` - Listar visitantes
+- `GET /visitantes/{id}` - Obtener visitante
+- `POST /visitantes` - Crear visitante
+- `PUT /visitantes/{id}` - Actualizar visitante
+- `DELETE /visitantes/{id}` - Eliminar visitante
+- `GET /visitantes/cedula` - Buscar por cédula
+- `POST /visitantes/{id}/marcar-solicitado` - Marcar como solicitado
 
-### Choferes
-- `GET /choferes` - Listar choferes
-- `GET /choferes/{id}` - Obtener chofer
-- `POST /choferes` - Crear chofer
-- `PUT /choferes/{id}` - Actualizar chofer
-- `DELETE /choferes/{id}` - Eliminar chofer
+### Departamentos
+- `GET /departamentos` - Listar departamentos
+- `GET /departamentos/{id}` - Obtener departamento
+- `POST /departamentos` - Crear departamento
+- `PUT /departamentos/{id}` - Actualizar departamento
+- `DELETE /departamentos/{id}` - Eliminar departamento
+- `GET /departamentos/activos` - Listar activos
+- `POST /departamentos/{id}/activar` - Activar departamento
 
-### Asignaciones
-- `GET /asignaciones` - Listar asignaciones
-- `GET /asignaciones/{id}` - Obtener asignación
-- `POST /asignaciones` - Crear asignación
-- `PUT /asignaciones/{id}` - Actualizar asignación
-- `DELETE /asignaciones/{id}` - Eliminar asignación
+### Dashboard
+- `GET /dashboard/stats` - Estadísticas generales
+- `GET /dashboard/reports` - Reportes detallados
+- `GET /dashboard/alertas` - Alertas del sistema
 
 ## 🎯 Módulos del Sistema
 
-### 1. Gestión de Vehículos
-- Registro completo de vehículos
-- Información técnica detallada
-- Historial de mantenimientos
-- Estado del vehículo en tiempo real
+### 1. Gestión de Visitantes
+- Registro completo de visitantes
+- Información personal y contacto
+- Control de estado (solicitado/pendiente)
+- Búsqueda por cédula
+- Historial de visitas
 
-### 2. Gestión de Choferes
-- Datos personales y profesionales
-- Licencias y certificaciones
-- Historial de asignaciones
-- Estado de disponibilidad
+### 2. Gestión de Departamentos
+- Registro de departamentos
+- Información del responsable
+- Control de estado (activo/inactivo)
+- Contactos y ubicación
+- Estadísticas de visitas
 
-### 3. Sistema de Asignaciones
-- Asignación de vehículos a choferes
-- Control de fechas y horarios
-- Seguimiento de uso
-- Reportes de asignaciones
+### 3. Sistema de Visitas
+- Registro de entrada y salida
+- Control de motivos de visita
+- Seguimiento de duración
+- Historial completo
+- Reportes de visitas
 
-### 4. Mantenimiento
-- Programación de mantenimientos
-- Control de talleres
-- Historial de reparaciones
-- Alertas de vencimientos
+### 4. Dashboard y Métricas
+- Estadísticas en tiempo real
+- Gráficos de visitas por departamento
+- Métricas de visitantes
+- Alertas automáticas
+- Reportes personalizables
 
-### 5. Seguros y Pólizas
-- Gestión de pólizas de seguro
-- Control de vencimientos
-- Coberturas y montos
-- Renovaciones automáticas
-
-### 6. Siniestros
-- Registro de accidentes
-- Seguimiento de reparaciones
-- Documentación legal
-- Análisis de siniestralidad
+### 5. Sistema de Alertas
+- Visitantes sin foto
+- Visitas prolongadas
+- Departamentos inactivos
+- Visitantes solicitados
+- Notificaciones en tiempo real
 
 ## 📊 Dashboard y Reportes
 
-- **Métricas en tiempo real** de la flota
-- **Gráficos interactivos** de uso y mantenimiento
+- **Métricas en tiempo real** de visitantes y departamentos
+- **Gráficos interactivos** de visitas y tendencias
 - **Reportes personalizables** por período
-- **Alertas automáticas** de vencimientos
-- **Análisis de costos** y eficiencia
+- **Alertas automáticas** de situaciones especiales
+- **Análisis de patrones** de visitas
 
 ## 🔒 Seguridad
 
@@ -242,10 +243,10 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 ## 📞 Soporte
 
 Para soporte técnico o consultas:
-- Email: soporte@sagaut.com
+- Email: soporte@siconvis.com
 - Documentación: [docs/](docs/)
-- Issues: [GitHub Issues](https://github.com/tu-usuario/sagaut-modern/issues)
+- Issues: [GitHub Issues](https://github.com/tu-usuario/siconvis/issues)
 
 ---
 
-**SAGAUT Modern** - Transformando la gestión de flotas vehiculares 🚗✨
+**SICONVIS** - Transformando el control de visitantes 👥✨

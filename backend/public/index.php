@@ -50,14 +50,29 @@ $id = $segments[2] ?? null;
 // Manejo especial para métodos HTTP
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 
-// Si el segundo segmento es un ID numérico, ajustar la lógica
-if (isset($segments[1]) && is_numeric($segments[1])) {
-    $id = $segments[1];
-    $method = 'index'; // Resetear método para usar la lógica HTTP
+// Verificar si hay un método específico en la URL
+// Un método específico es cualquier segmento que no sea numérico y no sea vacío
+$hasSpecificMethod = false;
+$specificMethodIndex = null;
+
+// Buscar el primer segmento no numérico después del controlador
+for ($i = 1; $i < count($segments); $i++) {
+    if (!is_numeric($segments[$i]) && !empty($segments[$i])) {
+        $hasSpecificMethod = true;
+        $specificMethodIndex = $i;
+        break;
+    }
 }
 
-if (!isset($segments[1]) || $segments[1] === null || is_numeric($segments[1])) {
-    // Si no hay método específico en la URL o es un ID, usar el método HTTP para determinar la acción
+// Si hay un método específico, usarlo
+if ($hasSpecificMethod) {
+    $method = $segments[$specificMethodIndex];
+    // Si hay segmentos antes del método específico, son IDs
+    if ($specificMethodIndex > 1) {
+        $id = $segments[$specificMethodIndex - 1];
+    }
+} else {
+    // Si no hay método específico, usar el método HTTP para determinar la acción
     switch ($httpMethod) {
         case 'GET':
             $method = $id ? 'show' : 'index';
@@ -73,26 +88,26 @@ if (!isset($segments[1]) || $segments[1] === null || is_numeric($segments[1])) {
             $method = 'delete';
             break;
     }
+    
+    // Si hay un ID en el segundo segmento y no hay método específico, usarlo
+    if (!$hasSpecificMethod && isset($segments[1]) && is_numeric($segments[1])) {
+        $id = $segments[1];
+    }
 }
 
 // Manejo especial para rutas de maestros dinámicas
 if ($controller === 'maestro' && isset($segments[1])) {
     $table = $segments[1];
     
-    // Si el segundo segmento es un ID numérico, ajustar la lógica
-    if (isset($segments[2]) && is_numeric($segments[2])) {
-        $id = $segments[2];
-        $method = 'index'; // Resetear método para usar la lógica HTTP
+    // Si hay un método específico después de la tabla, usarlo
+    if ($hasSpecificMethod && $specificMethodIndex > 1) {
+        $method = $segments[$specificMethodIndex];
+        // Si hay segmentos antes del método específico, son IDs
+        if ($specificMethodIndex > 2) {
+            $id = $segments[$specificMethodIndex - 1];
+        }
     } else {
-        $method = $segments[2] ?? 'index';
-        $id = $segments[3] ?? null;
-    }
-    
-    // Agregar la tabla como parámetro
-    $_GET['table'] = $table;
-    
-    // Si no hay método específico en la URL o es un ID, usar el método HTTP para determinar la acción
-    if (!isset($segments[2]) || $segments[2] === null || is_numeric($segments[2])) {
+        // Si no hay método específico, usar el método HTTP para determinar la acción
         switch ($httpMethod) {
             case 'GET':
                 $method = $id ? 'show' : 'index';
@@ -109,6 +124,9 @@ if ($controller === 'maestro' && isset($segments[1])) {
                 break;
         }
     }
+    
+    // Agregar la tabla como parámetro
+    $_GET['table'] = $table;
 }
 
 // Mapeo de rutas
@@ -128,39 +146,38 @@ $routes = [
             'refresh' => 'POST'
         ]
     ],
-    'vehiculos' => [
-        'controller' => 'VehiculoController',
+    'visitantes' => [
+        'controller' => 'VisitanteController',
         'methods' => [
             'index' => 'GET',
             'show' => 'GET',
             'store' => 'POST',
             'update' => 'PUT',
             'delete' => 'DELETE',
-            'disponibles' => 'GET',
-            'estadisticas' => 'GET',
-            'mantenimientos' => 'GET',
-            'asignaciones' => 'GET'
+            'cedula' => 'GET',
+            'solicitados' => 'GET',
+            'marcarSolicitadoConGuion' => 'POST',
+            'desmarcarSolicitadoConGuion' => 'POST',
+            'stats' => 'GET'
         ]
     ],
-    'choferes' => [
-        'controller' => 'ChoferController',
+    'departamentos' => [
+        'controller' => 'DepartamentoController',
         'methods' => [
             'index' => 'GET',
             'show' => 'GET',
             'store' => 'POST',
             'update' => 'PUT',
             'delete' => 'DELETE',
-            'disponibles' => 'GET',
-            'estadisticas' => 'GET',
-            'licenciasPorVencer' => 'GET',
-            'certificadosPorVencer' => 'GET',
-            'asignaciones' => 'GET',
-            'asignacionActual' => 'GET',
-            'validarLicencia' => 'GET'
+            'activos' => 'GET',
+            'activar' => 'POST',
+            'desactivar' => 'POST',
+            'stats' => 'GET',
+            'mas-visitados' => 'GET'
         ]
     ],
-    'asignaciones' => [
-        'controller' => 'AsignacionController',
+    'visitas' => [
+        'controller' => 'VisitaController',
         'methods' => [
             'index' => 'GET',
             'show' => 'GET',
@@ -170,67 +187,18 @@ $routes = [
             'finalizar' => 'POST',
             'cancelar' => 'POST',
             'activas' => 'GET',
-            'porVencer' => 'GET',
-            'vencidas' => 'GET',
-            'estadisticas' => 'GET'
+            'hoy' => 'GET',
+            'stats' => 'GET'
         ]
     ],
-    'mantenimientos' => [
-        'controller' => 'MantenimientoController',
+    'configuracion' => [
+        'controller' => 'ConfiguracionController',
         'methods' => [
             'index' => 'GET',
             'show' => 'GET',
             'store' => 'POST',
             'update' => 'PUT',
-            'delete' => 'DELETE',
-            'iniciar' => 'POST',
-            'completar' => 'POST',
-            'cancelar' => 'POST',
-            'pendientes' => 'GET',
-            'porVencer' => 'GET',
-            'vencidos' => 'GET',
-            'estadisticas' => 'GET',
-            'porVehiculo' => 'GET',
-            'proximos' => 'GET',
-            'programar' => 'POST'
-        ]
-    ],
-    'seguros' => [
-        'controller' => 'SeguroController',
-        'methods' => [
-            'index' => 'GET',
-            'show' => 'GET',
-            'store' => 'POST',
-            'update' => 'PUT',
-            'delete' => 'DELETE',
-            'porVencer' => 'GET',
-            'vencidos' => 'GET',
-            'estadisticas' => 'GET',
-            'porVehiculo' => 'GET',
-            'activo' => 'GET',
-            'renovar' => 'POST',
-            'alertas' => 'GET'
-        ]
-    ],
-    'siniestros' => [
-        'controller' => 'SiniestroController',
-        'methods' => [
-            'index' => 'GET',
-            'show' => 'GET',
-            'store' => 'POST',
-            'update' => 'PUT',
-            'delete' => 'DELETE',
-            'abiertos' => 'GET',
-            'porTipo' => 'GET',
-            'estadisticas' => 'GET',
-            'porVehiculo' => 'GET',
-            'porPeriodo' => 'GET',
-            'conTransito' => 'GET',
-            'conDenuncia' => 'GET',
-            'cerrar' => 'POST',
-            'archivar' => 'POST',
-            'porTaller' => 'GET',
-            'porMes' => 'GET'
+            'delete' => 'DELETE'
         ]
     ],
     'dashboard' => [
@@ -242,44 +210,9 @@ $routes = [
             'metricas' => 'GET'
         ]
     ],
-    'documentos' => [
-        'controller' => 'DocumentoController',
-        'methods' => [
-            'index' => 'GET',
-            'show' => 'GET',
-            'store' => 'POST',
-            'update' => 'PUT',
-            'delete' => 'DELETE',
-            'download' => 'GET',
-            'view' => 'GET',
-            'porEntidad' => 'GET',
-            'porVencer' => 'GET',
-            'vencidos' => 'GET',
-            'estadisticas' => 'GET',
-            'buscar' => 'GET',
-            'porCategoria' => 'GET',
-            'recientes' => 'GET',
-            'info' => 'GET'
-        ]
-    ],
     'maestros' => [
         'controller' => 'MaestroController',
         'methods' => [
-            'clases' => 'GET',
-            'marcas' => 'GET',
-            'modelos' => 'GET',
-            'colores' => 'GET',
-            'combustibles' => 'GET',
-            'transmisiones' => 'GET',
-            'asientos' => 'GET',
-            'unidadesPeso' => 'GET',
-            'choferes' => 'GET',
-            'organismos' => 'GET',
-            'talleres' => 'GET',
-            'aseguradoras' => 'GET',
-            'tiposMantenimiento' => 'GET',
-            'sexos' => 'GET',
-            'licencias' => 'GET',
             'perfiles' => 'GET'
         ]
     ],
@@ -293,6 +226,15 @@ $routes = [
             'destroy' => 'DELETE',
             'options' => 'GET',
             'stats' => 'GET'
+        ]
+    ],
+    'upload' => [
+        'controller' => 'UploadController',
+        'methods' => [
+            'uploadVisitorPhoto' => 'POST',
+            'uploadImage' => 'POST',
+            'deleteFile' => 'POST',
+            'getFileInfo' => 'GET'
         ]
     ]
 ];
@@ -353,7 +295,7 @@ if (!method_exists($controllerInstance, $method)) {
 }
 
 // Aplicar middleware de autenticación para rutas protegidas
-$protectedRoutes = ['vehiculos', 'choferes', 'asignaciones', 'mantenimientos', 'seguros', 'siniestros', 'dashboard', 'maestros', 'maestro'];
+$protectedRoutes = ['visitantes', 'departamentos', 'dashboard', 'maestros', 'maestro', 'visitas'];
 if (in_array($controller, $protectedRoutes)) {
     $authData = AuthMiddleware::handle();
     $_SESSION['user_id'] = $authData['user_id'];

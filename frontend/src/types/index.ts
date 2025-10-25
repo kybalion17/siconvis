@@ -20,209 +20,6 @@ export interface Perfil {
   permisos: Record<string, any>
 }
 
-// Tipos de vehículo
-export interface Vehiculo {
-  id: number
-  placa: string
-  clase_id: number
-  marca_id: number
-  modelo_id: number
-  anio: number
-  color_principal_id: number
-  color_secundario_id?: number
-  transmision_id: number
-  numero_chasis?: string
-  numero_motor?: string
-  kilometraje: number
-  peso?: number
-  unidad_peso: 'kg' | 'ton'
-  numero_asientos?: number
-  combustible_id: number
-  numero_puestos?: number
-  observaciones?: string
-  estado: 'activo' | 'inactivo' | 'mantenimiento' | 'siniestrado'
-  created_at: string
-  updated_at: string
-  eliminado: number
-}
-
-export interface Marca {
-  id: number
-  nombre: string
-  activa: boolean
-}
-
-export interface Modelo {
-  id: number
-  marca_id: number
-  nombre: string
-  activo: boolean
-}
-
-export interface ClaseVehiculo {
-  id: number
-  nombre: string
-  descripcion: string
-}
-
-export interface Color {
-  id: number
-  nombre: string
-  codigo_hex?: string
-  activo: boolean
-}
-
-export interface TipoCombustible {
-  id: number
-  nombre: string
-}
-
-export interface TipoTransmision {
-  id: number
-  nombre: string
-}
-
-// Tipos de chofer
-export interface Chofer {
-  id: number
-  cedula: string
-  nombre: string
-  apellido: string
-  fecha_nacimiento?: string
-  sexo?: 'M' | 'F'
-  telefono?: string
-  direccion?: string
-  numero_licencia?: string
-  fecha_vencimiento_licencia?: string
-  numero_certificado?: string
-  fecha_vencimiento_certificado?: string
-  estado: 'activo' | 'inactivo' | 'suspendido'
-  created_at: string
-  updated_at: string
-  eliminado: number
-}
-
-// Tipos de asignación
-export interface Asignacion {
-  id: number
-  vehiculo_id: number
-  chofer_id?: number
-  solicitante: string
-  cedula_solicitante: string
-  departamento_id?: number
-  direccion_id?: number
-  fecha_asignacion: string
-  fecha_devolucion?: string
-  numero_inspeccion?: number
-  municipio_id?: number
-  parroquia_id?: number
-  comuna?: string
-  observaciones?: string
-  documentos?: string
-  estado: 'activa' | 'finalizada' | 'cancelada'
-  created_at: string
-  updated_at: string
-  eliminado: number
-}
-
-// Tipos de mantenimiento
-export interface Mantenimiento {
-  id: number
-  vehiculo_id: number
-  tipo_mantenimiento_id: number
-  taller_id?: number
-  kilometraje_actual: number
-  orden_trabajo?: string
-  fecha_mantenimiento: string
-  inspector_cedula?: string
-  inspector_nombre?: string
-  costo?: number
-  descripcion_trabajo?: string
-  estado: 'programado' | 'en_proceso' | 'completado' | 'cancelado'
-  created_at: string
-  updated_at: string
-  eliminado: number
-}
-
-export interface TipoMantenimiento {
-  id: number
-  nombre: string
-  descripcion?: string
-  kilometraje_intervalo?: number
-  dias_intervalo?: number
-}
-
-export interface Taller {
-  id: number
-  rif: string
-  nombre: string
-  telefono?: string
-  direccion?: string
-  contacto?: string
-  email?: string
-  especialidad?: string
-  activo: boolean
-}
-
-// Tipos de seguro
-export interface Seguro {
-  id: number
-  vehiculo_id: number
-  aseguradora_id: number
-  numero_poliza: string
-  fecha_inicio: string
-  fecha_vencimiento: string
-  cobertura_amplia: number
-  cobertura_rcv: number
-  cobertura_defensa: number
-  cobertura_exceso: number
-  cobertura_accidente: number
-  cobertura_asistencia: number
-  suma_total: number
-  prima?: number
-  estado: 'activo' | 'vencido' | 'cancelado'
-  created_at: string
-  updated_at: string
-  eliminado: number
-}
-
-export interface Aseguradora {
-  id: number
-  rif: string
-  nombre: string
-  telefono?: string
-  direccion?: string
-  contacto?: string
-  email?: string
-  activa: boolean
-}
-
-// Tipos de siniestro
-export interface Siniestro {
-  id: number
-  vehiculo_id: number
-  fecha_ocurrencia: string
-  estado_id?: number
-  municipio_id?: number
-  parroquia_id?: number
-  tipo_siniestro: 'colision' | 'volcamiento' | 'choque' | 'atropello' | 'otro'
-  inspeccion_id?: number
-  taller_id?: number
-  fecha_tentativa_reparacion?: string
-  vehiculo_rueda: boolean
-  intervino_transito: boolean
-  causa?: string
-  danos?: string
-  organismo_id?: number
-  fecha_denuncia?: string
-  numero_denuncia?: string
-  costo_reparacion?: number
-  estado: 'reportado' | 'en_investigacion' | 'cerrado' | 'archivado'
-  created_at: string
-  updated_at: string
-  eliminado: number
-}
-
 // Tipos de respuesta de API
 export interface ApiResponse<T = any> {
   success: boolean
@@ -252,54 +49,112 @@ export interface LoginForm {
   password: string
 }
 
-export interface VehiculoForm {
-  placa: string
-  clase_id: number
-  marca_id: number
-  modelo_id: number
-  anio: number
-  color_principal_id: number
-  color_secundario_id?: number
-  transmision_id: number
-  numero_chasis?: string
-  numero_motor?: string
-  kilometraje: number
-  peso?: number
-  unidad_peso: 'kg' | 'ton'
-  numero_asientos?: number
-  combustible_id: number
-  numero_puestos?: number
-  observaciones?: string
-  estado: 'activo' | 'inactivo' | 'mantenimiento' | 'siniestrado'
-}
-
-export interface ChoferForm {
-  cedula: string
+// Tipos de visitante
+export interface Visitante {
+  id: number
   nombre: string
   apellido: string
-  fecha_nacimiento?: string
-  sexo?: 'M' | 'F'
-  telefono?: string
-  direccion?: string
-  numero_licencia?: string
-  fecha_vencimiento_licencia?: string
-  numero_certificado?: string
-  fecha_vencimiento_certificado?: string
-  estado: 'activo' | 'inactivo' | 'suspendido'
+  cedula: string
+  telefono_primario: string
+  telefono_secundario: string
+  foto: string
+  solicitado: number
+  eliminado: number
+  created_at: string
+  updated_at: string
+}
+
+// Tipos de departamento
+export interface Departamento {
+  id: number
+  nombre: string
+  responsable: string
+  telefono_primario: string
+  telefono_secundario: string
+  status: number
+  eliminado: number
+  created_at: string
+  updated_at: string
+}
+
+// Tipos de visita
+export interface Visita {
+  id: number
+  visitante_id: number
+  departamento_id: number
+  motivo_visita: string
+  fecha_entrada: string
+  fecha_salida?: string
+  estado: 'activa' | 'finalizada' | 'cancelada'
+  observaciones?: string
+  eliminado: number
+  created_at: string
+  updated_at: string
+}
+
+// Tipos de relación visitante-departamento
+export interface VisitanteDepartamento {
+  id: number
+  visitantes_id: number
+  departamentos_id: number
+  motivo_visita: string
+  created_at: string
+  updated_at: string
+}
+
+// Tipos de documento de visitante
+export interface DocumentoVisitante {
+  id: number
+  visitante_id: number
+  tipo_documento: string
+  numero_documento?: string
+  fecha_emision?: string
+  fecha_vencimiento?: string
+  archivo_ruta?: string
+  observaciones?: string
+  estado: 'activo' | 'vencido' | 'inactivo'
+  eliminado: number
+  created_at: string
+  updated_at: string
+}
+
+// Tipos de historial de visitas
+export interface HistorialVisita {
+  id: number
+  visitante_id: number
+  departamento_id: number
+  motivo_visita: string
+  fecha_entrada: string
+  fecha_salida?: string
+  duracion_minutos: number
+  observaciones?: string
+  estado_final: 'completada' | 'cancelada' | 'abandonada'
+  created_at: string
+}
+
+// Tipos de configuración del sistema
+export interface Configuracion {
+  id: number
+  clave: string
+  valor: string
+  descripcion?: string
+  tipo: 'string' | 'number' | 'boolean' | 'json'
+  activo: boolean
+  created_at: string
+  updated_at: string
 }
 
 // Tipos de dashboard
 export interface DashboardStats {
-  total_vehiculos: number
-  vehiculos_activos: number
-  vehiculos_mantenimiento: number
-  vehiculos_siniestrados: number
-  total_choferes: number
-  choferes_activos: number
-  asignaciones_activas: number
-  mantenimientos_pendientes: number
-  seguros_por_vencer: number
-  siniestros_abiertos: number
+  total_visitantes: number
+  visitantes_solicitados: number
+  visitantes_hoy: number
+  visitantes_pendientes: number
+  total_departamentos: number
+  departamentos_activos: number
+  departamentos_inactivos: number
+  visitas_activas: number
+  visitas_hoy: number
 }
 
 export interface ChartData {
@@ -311,4 +166,29 @@ export interface ChartData {
     borderColor?: string | string[]
     borderWidth?: number
   }[]
+}
+
+// Tipos de formularios específicos
+export interface VisitanteForm {
+  nombre: string
+  apellido: string
+  cedula: string
+  telefono_primario: string
+  telefono_secundario: string
+  foto?: string
+  solicitado?: number
+}
+
+export interface DepartamentoForm {
+  nombre: string
+  responsable: string
+  telefono_primario: string
+  telefono_secundario: string
+  status?: number
+}
+
+export interface VisitaForm {
+  visitantes_id: number
+  departamentos_id: number
+  motivo_visita: string
 }

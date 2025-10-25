@@ -21,7 +21,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           <CCol md={4} className="text-center">
             <div className="mb-4">
               <CIcon
-                icon="cil-car"
+                icon="cil-user"
                 size="3xl"
                 style={{ 
                   fontSize: '4rem',
@@ -38,7 +38,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
             />
             <h4 className="text-dark mb-0">{message}</h4>
             <p className="text-muted mt-2">
-              Sistema de Control de Flota Vehicular
+              Sistema de Control de Visitantes
             </p>
           </CCol>
         </CRow>

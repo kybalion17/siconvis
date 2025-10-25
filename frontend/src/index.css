@@ -1236,3 +1236,74 @@ body {
 .c-sidebar > div:last-child::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.5) !important;
 }
+
+/* Zebra striping para DataTables de Visitantes y Visitas */
+.visitantes-table .p-datatable-thead > tr > th {
+  background: #f0f3fa;
+  color: #001a79;
+  font-weight: 600;
+}
+
+.visitantes-table .p-datatable-tbody > tr:nth-child(odd) {
+  background-color: #f8faff;
+}
+
+.visitantes-table .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.visitantes-table .p-datatable-tbody > tr:hover {
+  background-color: #eef3ff;
+}
+
+.visitantes-table .p-datatable-tbody > tr.p-highlight {
+  background-color: #dce6ff !important;
+  color: #001a79 !important;
+}
+
+.visitas-table .p-datatable-thead > tr > th {
+  background: #f0f3fa;
+  color: #001a79;
+  font-weight: 600;
+}
+
+.visitas-table .p-datatable-tbody > tr:nth-child(odd) {
+  background-color: #f8faff;
+}
+
+.visitas-table .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.visitas-table .p-datatable-tbody > tr:hover {
+  background-color: #eef3ff;
+}
+
+.visitas-table .p-datatable-tbody > tr.p-highlight {
+  background-color: #dce6ff !important;
+  color: #001a79 !important;
+}
+
+/* Zebra striping para DataTable de Departamentos */
+.departamentos-table .p-datatable-thead > tr > th {
+  background: #f0f3fa;
+  color: #001a79;
+  font-weight: 600;
+}
+
+.departamentos-table .p-datatable-tbody > tr:nth-child(odd) {
+  background-color: #f8faff;
+}
+
+.departamentos-table .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.departamentos-table .p-datatable-tbody > tr:hover {
+  background-color: #eef3ff;
+}
+
+.departamentos-table .p-datatable-tbody > tr.p-highlight {
+  background-color: #dce6ff !important;
+  color: #001a79 !important;
+}

@@ -6,9 +6,9 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Visitantes from './pages/Visitantes'
 import Departamentos from './pages/Departamentos'
-import Visitas from './pages/Visitas'
-import Reportes from './pages/Reportes'
-import Configuracion from './pages/Configuracion'
+import VisitasWorking from './pages/Visitas-working'
+import ReportesWorking from './pages/Reportes-working'
+import ConfiguracionWorking from './pages/Configuracion-working'
 import LoadingSpinner from './components/LoadingSpinner'
 
 function App() {
@@ -29,9 +29,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/visitantes" element={<Visitantes />} />
         <Route path="/departamentos" element={<Departamentos />} />
-        <Route path="/visitas" element={<Visitas />} />
-        <Route path="/reportes" element={<Reportes />} />
-        <Route path="/configuracion" element={<Configuracion />} />
+        <Route path="/visitas" element={<VisitasWorking />} />
+        <Route path="/reportes" element={<ReportesWorking />} />
+        <Route path="/configuracion" element={<ConfiguracionWorking />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Layout>
