@@ -160,12 +160,29 @@ class Visita extends BaseModel
     }
 
     /**
-     * Finalizar visita (no aplicable en trmavisitantes_relationship)
+     * Finalizar visita activa
      */
     public function finalizarVisita(int $id, string $observaciones = null): bool
     {
-        // No aplicable en este esquema simplificado
-        return true;
+        try {
+            $sql = "UPDATE {$this->table} SET estado = 'finalizada', fecha_salida = NOW()";
+            
+            if ($observaciones) {
+                $sql .= ", observaciones = ?";
+                $params = [$observaciones, $id];
+            } else {
+                $params = [$id];
+            }
+            
+            $sql .= " WHERE id = ? AND estado = 'activa' AND eliminado = 0";
+            
+            Database::query($sql, $params);
+            
+            return Database::rowCount() > 0;
+        } catch (\Exception $e) {
+            error_log('Error al finalizar visita: ' . $e->getMessage());
+            return false;
+        }
     }
 
     /**

@@ -221,11 +221,21 @@ class ApiService {
         }
 
         async finalizarVisita(id: number, observaciones?: string) {
-          return this.post(`/visitas/${id}/finalizar`, { observaciones })
+          return this.post(`/visitas/finalizar/${id}`, { observaciones })
         }
 
         async cancelarVisita(id: number, observaciones?: string) {
-          return this.post(`/visitas/${id}/cancelar`, { observaciones })
+          return this.post(`/visitas/cancelar?id=${id}`, { observaciones })
+        }
+
+        // Reportes
+        async generarReporte(data: {
+          fecha_inicio: string
+          fecha_fin: string
+          tipo_reporte: string
+          departamento_id?: number
+        }) {
+          return this.post('/reportes/generar', data)
         }
 
         async getVisitasActivas() {

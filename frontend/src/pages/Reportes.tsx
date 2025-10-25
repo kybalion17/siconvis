@@ -8,7 +8,9 @@ import { Dropdown } from 'primereact/dropdown'
 import { Calendar } from 'primereact/calendar'
 import { Toast } from 'primereact/toast'
 import { FilterMatchMode } from 'primereact/api'
-import { useQuery } from 'react-query'
+import { useQuery, useMutation } from 'react-query'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
 import api from '../services/api'
 import {
   CCard,
@@ -47,6 +49,18 @@ const Reportes: React.FC = () => {
     tipo: { value: null as string | null, matchMode: FilterMatchMode.CONTAINS },
   })
 
+  // Obtener estadísticas dinámicas usando el endpoint del dashboard
+  const { data: estadisticas, isLoading: isLoadingStats } = useQuery(
+    'estadisticas-reportes',
+    () => api.getDashboardStats(),
+    {
+      select: (response) => response.data,
+      onError: (error: any) => {
+        console.error('Error al obtener estadísticas:', error)
+      }
+    }
+  )
+
   // Formulario de filtros
   const [filtrosForm, setFiltrosForm] = useState({
     fecha_inicio: null as Date | null,
@@ -55,54 +69,6 @@ const Reportes: React.FC = () => {
     tipo_reporte: 'general'
   })
 
-  // Cargar datos de reportes (simulado por ahora)
-  const { isLoading, isError, refetch } = useQuery(
-    'reportes',
-    () => {
-      // Simular datos de reportes
-      return Promise.resolve({
-        success: true,
-        data: [
-          {
-            id: 1,
-            tipo: 'Visitas por Departamento',
-            fecha_inicio: '2024-01-01',
-            fecha_fin: '2024-01-31',
-            total_registros: 45,
-            estado: 'completado',
-            created_at: '2024-01-15 10:30:00'
-          },
-          {
-            id: 2,
-            tipo: 'Visitantes Más Frecuentes',
-            fecha_inicio: '2024-01-01',
-            fecha_fin: '2024-01-31',
-            total_registros: 23,
-            estado: 'completado',
-            created_at: '2024-01-15 11:15:00'
-          },
-          {
-            id: 3,
-            tipo: 'Reporte General',
-            fecha_inicio: '2024-01-01',
-            fecha_fin: '2024-01-31',
-            total_registros: 156,
-            estado: 'procesando',
-            created_at: '2024-01-15 12:00:00'
-          }
-        ]
-      })
-    },
-    {
-      onSuccess: (data) => {
-        if (data.success) {
-          setReportes(data.data)
-        }
-      },
-      retry: 1,
-      retryDelay: 1000,
-    }
-  )
 
   // Cargar departamentos para filtros
   const { data: departamentosData } = useQuery(
@@ -116,6 +82,63 @@ const Reportes: React.FC = () => {
       },
     }
   )
+
+  // Mutation para generar reporte
+  const generarReporteMutation = useMutation(
+    (data: {
+      fecha_inicio: string
+      fecha_fin: string
+      tipo_reporte: string
+      departamento_id?: number
+    }) => api.generarReporte(data),
+    {
+      onSuccess: (response) => {
+        if (response.success === true) {
+          toast.current?.show({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Reporte generado correctamente',
+          })
+          
+          // Crear registro del reporte para el datagrid
+          const nuevoReporte: ReporteData = {
+            id: Date.now(), // ID temporal
+            tipo: getTipoReporteLabel(filtrosForm.tipo_reporte),
+            fecha_inicio: filtrosForm.fecha_inicio?.toISOString().split('T')[0] || '',
+            fecha_fin: filtrosForm.fecha_fin?.toISOString().split('T')[0] || '',
+            departamento_id: filtrosForm.departamento_id || undefined,
+            total_registros: response.data.length,
+            estado: 'completado',
+            created_at: new Date().toISOString()
+          }
+          
+          // Agregar al datagrid
+          setReportes(prev => [nuevoReporte, ...prev])
+          
+          // Exportar automáticamente
+          exportarDatos(response.data, filtrosForm.tipo_reporte)
+        }
+      },
+      onError: (error: any) => {
+        toast.current?.show({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.response?.data?.message || 'Error al generar reporte',
+        })
+      },
+    }
+  )
+
+  // Función para obtener la etiqueta del tipo de reporte
+  const getTipoReporteLabel = (tipo: string): string => {
+    const labels: { [key: string]: string } = {
+      'general': 'Reporte General',
+      'visitas_por_departamento': 'Visitas por Departamento',
+      'visitantes_frecuentes': 'Visitantes Más Frecuentes',
+      'visitas_por_fecha': 'Visitas por Fecha'
+    }
+    return labels[tipo] || tipo
+  }
 
   // Funciones auxiliares
   const handleGenerarReporte = () => {
@@ -134,15 +157,103 @@ const Reportes: React.FC = () => {
       detail: 'El reporte se está generando, por favor espere...',
     })
 
-    // Simular generación de reporte
-    setTimeout(() => {
+    // Formatear fechas para el backend
+    const fechaInicio = filtrosForm.fecha_inicio.toISOString().split('T')[0]
+    const fechaFin = filtrosForm.fecha_fin.toISOString().split('T')[0]
+
+    generarReporteMutation.mutate({
+      fecha_inicio: fechaInicio,
+      fecha_fin: fechaFin,
+      tipo_reporte: filtrosForm.tipo_reporte,
+      departamento_id: filtrosForm.departamento_id || undefined
+    })
+  }
+
+  // Función para exportar datos a XLSX
+  const exportarDatos = (datos: any[], tipoReporte: string) => {
+    if (!datos || datos.length === 0) {
       toast.current?.show({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: 'Reporte generado correctamente',
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'No hay datos para exportar',
       })
-      refetch()
-    }, 2000)
+      return
+    }
+
+    // Preparar datos para exportación
+    const datosExportar = prepararDatosParaExportacion(datos, tipoReporte)
+    
+    // Crear workbook
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.json_to_sheet(datosExportar)
+    
+    // Agregar hoja al workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'Reporte')
+    
+    // Generar nombre de archivo
+    const fechaActual = new Date().toISOString().split('T')[0]
+    const nombreArchivo = `reporte_${tipoReporte}_${fechaActual}.xlsx`
+    
+    // Exportar archivo
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+    const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    saveAs(blob, nombreArchivo)
+
+    toast.current?.show({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Reporte exportado correctamente',
+    })
+  }
+
+  // Función para preparar datos según el tipo de reporte
+  const prepararDatosParaExportacion = (datos: any[], tipoReporte: string) => {
+    switch (tipoReporte) {
+      case 'general':
+        return datos.map(item => ({
+          'ID Visita': item.id,
+          'Nombre Visitante': item.visitante_nombre,
+          'Apellido Visitante': item.visitante_apellido,
+          'Cédula': item.visitante_cedula,
+          'Teléfono': item.visitante_telefono,
+          'Departamento': item.departamento_nombre,
+          'Motivo Visita': item.motivo_visita,
+          'Fecha Entrada': item.fecha_entrada,
+          'Fecha Salida': item.fecha_salida || 'N/A',
+          'Estado': item.estado,
+          'Observaciones': item.observaciones || 'N/A'
+        }))
+      
+      case 'visitas_por_departamento':
+        return datos.map(item => ({
+          'Departamento': item.departamento,
+          'Total Visitas': item.total_visitas,
+          'Visitas Activas': item.visitas_activas,
+          'Visitas Finalizadas': item.visitas_finalizadas,
+          'Visitas Canceladas': item.visitas_canceladas
+        }))
+      
+      case 'visitantes_frecuentes':
+        return datos.map(item => ({
+          'Nombre': item.nombre,
+          'Apellido': item.apellido,
+          'Cédula': item.cedula,
+          'Total Visitas': item.total_visitas,
+          'Última Visita': item.ultima_visita
+        }))
+      
+      case 'visitas_por_fecha':
+        return datos.map(item => ({
+          'Fecha': item.fecha,
+          'Total Visitas': item.total_visitas,
+          'Visitas Activas': item.visitas_activas,
+          'Visitas Finalizadas': item.visitas_finalizadas,
+          'Visitas Canceladas': item.visitas_canceladas
+        }))
+      
+      default:
+        return datos
+    }
   }
 
   const handleExportar = (reporte: ReporteData) => {
@@ -230,28 +341,7 @@ const Reportes: React.FC = () => {
     value: d.id
   })) || []
 
-  if (isLoading) {
-    return (
-      <div className="container-fluid">
-        <div className="d-flex justify-content-center align-items-center" style={{ height: '400px' }}>
-          <CSpinner size="lg" />
-        </div>
-      </div>
-    )
-  }
-
-  if (isError) {
-    return (
-      <div className="container-fluid">
-        <CAlert color="danger">
-          <strong>Error:</strong> No se pudieron cargar los reportes. 
-          <CButton color="link" onClick={() => refetch()}>
-            Intentar nuevamente
-          </CButton>
-        </CAlert>
-      </div>
-    )
-  }
+  // Eliminamos las verificaciones de loading e error ya que no usamos useQuery
 
   return (
     <div className="container-fluid">
@@ -259,12 +349,6 @@ const Reportes: React.FC = () => {
       
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
         <h1 className="h2 mb-0">Reportes y Estadísticas</h1>
-        <div className="btn-toolbar mb-2 mb-md-0">
-          <CButton color="primary" onClick={() => setVisible(true)}>
-            <CIcon icon="cil-chart" className="me-2" />
-            Generar Reporte
-          </CButton>
-        </div>
       </div>
 
       {/* Filtros */}
@@ -334,7 +418,13 @@ const Reportes: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">156</h4>
+                  <h4 className="mb-0">
+                    {isLoadingStats ? (
+                      <CSpinner size="sm" />
+                    ) : (
+                      estadisticas?.total_visitas || 0
+                    )}
+                  </h4>
                   <p className="mb-0">Total Visitas</p>
                 </div>
                 <div className="align-self-center">
@@ -349,7 +439,13 @@ const Reportes: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">23</h4>
+                  <h4 className="mb-0">
+                    {isLoadingStats ? (
+                      <CSpinner size="sm" />
+                    ) : (
+                      estadisticas?.visitas_activas || 0
+                    )}
+                  </h4>
                   <p className="mb-0">Visitas Activas</p>
                 </div>
                 <div className="align-self-center">
@@ -364,7 +460,13 @@ const Reportes: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">8</h4>
+                  <h4 className="mb-0">
+                    {isLoadingStats ? (
+                      <CSpinner size="sm" />
+                    ) : (
+                      estadisticas?.departamentos_activos || 0
+                    )}
+                  </h4>
                   <p className="mb-0">Departamentos</p>
                 </div>
                 <div className="align-self-center">
@@ -379,7 +481,13 @@ const Reportes: React.FC = () => {
             <CCardBody className="pb-0">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="mb-0">12</h4>
+                  <h4 className="mb-0">
+                    {isLoadingStats ? (
+                      <CSpinner size="sm" />
+                    ) : (
+                      estadisticas?.visitas_hoy || 0
+                    )}
+                  </h4>
                   <p className="mb-0">Visitas Hoy</p>
                 </div>
                 <div className="align-self-center">
@@ -408,7 +516,7 @@ const Reportes: React.FC = () => {
             filterDisplay="menu"
             globalFilterFields={['tipo']}
             emptyMessage="No se encontraron reportes"
-            loading={isLoading}
+            loading={generarReporteMutation.isLoading}
             responsiveLayout="scroll"
           >
             <Column
@@ -452,80 +560,114 @@ const Reportes: React.FC = () => {
 
       {/* Modal para generar nuevo reporte */}
       <Dialog
-        header="Generar Nuevo Reporte"
+        header={
+          <div className="d-flex align-items-center">
+            <i className="pi pi-chart-line me-2" style={{ color: '#001a79' }}></i>
+            <span>Generar Nuevo Reporte</span>
+          </div>
+        }
         visible={visible}
         style={{ width: '50vw' }}
         onHide={() => setVisible(false)}
         modal
+        className="p-fluid"
       >
-        <div className="p-fluid">
-          <div className="field">
-            <label htmlFor="tipo_reporte">Tipo de Reporte *</label>
-            <Dropdown
-              id="tipo_reporte"
-              value={filtrosForm.tipo_reporte}
-              options={tipoReporteOptions}
-              onChange={(e) => setFiltrosForm({ ...filtrosForm, tipo_reporte: e.value })}
-              placeholder="Seleccione el tipo de reporte"
-              required
-            />
-          </div>
+        <form onSubmit={(e) => { e.preventDefault(); handleGenerarReporte(); setVisible(false); }}>
+          <div className="p-4">
+            <div className="grid">
+              <div className="col-12 md:col-12">
+                <div className="field">
+                  <label htmlFor="tipo_reporte" className="font-semibold block mb-2">
+                    Tipo de Reporte *
+                  </label>
+                  <Dropdown
+                    id="tipo_reporte"
+                    value={filtrosForm.tipo_reporte}
+                    options={tipoReporteOptions}
+                    onChange={(e) => setFiltrosForm({ ...filtrosForm, tipo_reporte: e.value })}
+                    placeholder="Seleccione el tipo de reporte"
+                    className="w-100"
+                    required
+                  />
+                </div>
+              </div>
 
-          <div className="field">
-            <label htmlFor="fecha_inicio">Fecha Inicio *</label>
-            <Calendar
-              id="fecha_inicio"
-              value={filtrosForm.fecha_inicio}
-              onChange={(e) => setFiltrosForm({ ...filtrosForm, fecha_inicio: e.value as Date })}
-              dateFormat="dd/mm/yy"
-              placeholder="Seleccione fecha inicio"
-              required
-            />
-          </div>
+              <div className="col-6 md:col-6">
+                <div className="field">
+                  <label htmlFor="fecha_inicio" className="font-semibold block mb-2">
+                    Fecha Inicio *
+                  </label>
+                  <Calendar
+                    id="fecha_inicio"
+                    value={filtrosForm.fecha_inicio}
+                    onChange={(e) => setFiltrosForm({ ...filtrosForm, fecha_inicio: e.value as Date })}
+                    dateFormat="dd/mm/yy"
+                    placeholder="Seleccione fecha inicio"
+                    className="w-100"
+                    required
+                  />
+                </div>
+              </div>
 
-          <div className="field">
-            <label htmlFor="fecha_fin">Fecha Fin *</label>
-            <Calendar
-              id="fecha_fin"
-              value={filtrosForm.fecha_fin}
-              onChange={(e) => setFiltrosForm({ ...filtrosForm, fecha_fin: e.value as Date })}
-              dateFormat="dd/mm/yy"
-              placeholder="Seleccione fecha fin"
-              required
-            />
-          </div>
+              <div className="col-6 md:col-6">
+                <div className="field">
+                  <label htmlFor="fecha_fin" className="font-semibold block mb-2">
+                    Fecha Fin *
+                  </label>
+                  <Calendar
+                    id="fecha_fin"
+                    value={filtrosForm.fecha_fin}
+                    onChange={(e) => setFiltrosForm({ ...filtrosForm, fecha_fin: e.value as Date })}
+                    dateFormat="dd/mm/yy"
+                    placeholder="Seleccione fecha fin"
+                    className="w-100"
+                    required
+                  />
+                </div>
+              </div>
 
-          <div className="field">
-            <label htmlFor="departamento_id">Departamento (Opcional)</label>
-            <Dropdown
-              id="departamento_id"
-              value={filtrosForm.departamento_id}
-              options={departamentoOptions}
-              onChange={(e) => setFiltrosForm({ ...filtrosForm, departamento_id: e.value })}
-              placeholder="Seleccione departamento"
-              showClear
-            />
-          </div>
+              <div className="col-12 md:col-12">
+                <div className="field">
+                  <label htmlFor="departamento_id" className="font-semibold block mb-2">
+                    Departamento (Opcional)
+                  </label>
+                  <Dropdown
+                    id="departamento_id"
+                    value={filtrosForm.departamento_id}
+                    options={departamentoOptions}
+                    onChange={(e) => setFiltrosForm({ ...filtrosForm, departamento_id: e.value })}
+                    placeholder="Seleccione departamento"
+                    showClear
+                    className="w-100"
+                  />
+                </div>
+              </div>
+            </div>
 
-          <div className="flex justify-content-end gap-2">
-            <Button
-              type="button"
-              label="Cancelar"
-              icon="pi pi-times"
-              className="p-button-text"
-              onClick={() => setVisible(false)}
-            />
-            <Button
-              type="button"
-              label="Generar Reporte"
-              icon="pi pi-chart"
-              onClick={() => {
-                handleGenerarReporte()
-                setVisible(false)
-              }}
-            />
+            <div className="mt-4 pt-3" style={{ borderTop: '2px solid #f0f0f0' }}>
+              <div className="grid">
+                <div className="col-3 md:col-3 offset-md-3">
+                  <Button
+                    type="button"
+                    label="Cancelar"
+                    icon="pi pi-times"
+                    className="p-button-text w-100"
+                    onClick={() => setVisible(false)}
+                  />
+                </div>
+                <div className="col-3 md:col-3">
+                  <Button
+                    type="submit"
+                    label="Generar Reporte"
+                    icon="pi pi-chart-line"
+                    className="w-100"
+                    loading={generarReporteMutation.isLoading}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </form>
       </Dialog>
     </div>
   )

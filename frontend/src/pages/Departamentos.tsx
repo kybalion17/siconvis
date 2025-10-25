@@ -334,7 +334,7 @@ const Departamentos: React.FC = () => {
 
   const actionBodyTemplate = (rowData: DepartamentoType) => {
     return (
-      <div className="d-flex gap-2">
+      <div className="d-flex gap-2" style={{ minHeight: '40px', alignItems: 'center' }}>
         <Button
           icon="pi pi-pencil"
           className="p-button-rounded p-button-text p-button-sm"

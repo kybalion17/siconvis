@@ -4,6 +4,8 @@ import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
+import { InputTextarea } from 'primereact/inputtextarea'
+import { Dropdown } from 'primereact/dropdown'
 import { Toast } from 'primereact/toast'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog'
 import { FilterMatchMode } from 'primereact/api'
@@ -19,7 +21,7 @@ import {
   CAlert,
   CSpinner,
 } from '@coreui/react'
-import { Visitante as VisitanteType, VisitanteForm } from '../types'
+import { Visitante as VisitanteType, VisitanteForm, Departamento as DepartamentoType, VisitaForm } from '../types'
 import PhotoCapture, { PhotoCaptureRef } from '../components/PhotoCapture-working'
 
 const Visitantes: React.FC = () => {
@@ -48,6 +50,22 @@ const Visitantes: React.FC = () => {
 
   // Estados para validaciones
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
+
+  // Estados para el modal de nueva visita
+  const [visitaVisible, setVisitaVisible] = useState(false)
+  const [departamentos, setDepartamentos] = useState<DepartamentoType[]>([])
+  const [selectedVisitanteForVisita, setSelectedVisitanteForVisita] = useState<VisitanteType | null>(null)
+  const [visitaFormData, setVisitaFormData] = useState<VisitaForm>({
+    visitante_id: 0,
+    departamento_id: 0,
+    motivo_visita: '',
+    observaciones: '',
+  })
+
+  // Debug: Log cuando cambia visitaFormData
+  // useEffect(() => {
+  //   console.log('🔄 visitaFormData cambió:', visitaFormData)
+  // }, [visitaFormData])
 
   // Query client para invalidar queries
   const queryClient = useQueryClient()
@@ -135,6 +153,24 @@ const Visitantes: React.FC = () => {
       retryDelay: 1000,
       refetchOnWindowFocus: false,
       staleTime: 0,
+    }
+  )
+
+  // Query para cargar departamentos
+  const { isLoading: isLoadingDepartamentos } = useQuery(
+    ['departamentos', 'dropdown'],
+    () => api.getDepartamentos(1, 100),
+    {
+      onSuccess: (data) => {
+        if (data.success) {
+          setDepartamentos(data.data)
+        }
+      },
+      onError: (error: any) => {
+        console.error('Error cargando departamentos:', error)
+      },
+      retry: 1,
+      retryDelay: 1000,
     }
   )
 
@@ -253,6 +289,27 @@ const Visitantes: React.FC = () => {
     },
   })
 
+  // Mutación para crear visita
+  const createVisitaMutation = useMutation((data: VisitaForm) => api.createVisita(data), {
+    onSuccess: () => {
+      toast.current?.show({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Visita creada exitosamente',
+      })
+      queryClient.invalidateQueries(['visitas'])
+      setVisitaVisible(false)
+      resetVisitaForm()
+    },
+    onError: (error: any) => {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: error.response?.data?.message || 'Error al crear visita',
+      })
+    },
+  })
+
   const resetForm = () => {
     setFormData({
       nombre: '',
@@ -265,6 +322,42 @@ const Visitantes: React.FC = () => {
     })
     setSelectedVisitante(null)
     setValidationErrors({}) // Limpiar errores de validación
+  }
+
+  const resetVisitaForm = () => {
+    setVisitaFormData({
+      visitante_id: 0,
+      departamento_id: 0,
+      motivo_visita: '',
+      observaciones: '',
+    })
+    setSelectedVisitanteForVisita(null)
+  }
+
+  const handleCreateVisita = (visitante: VisitanteType) => {
+    const newFormData = {
+      visitante_id: visitante.id,
+      departamento_id: 0,
+      motivo_visita: '',
+      observaciones: '',
+    }
+    
+    setSelectedVisitanteForVisita(visitante)
+    setVisitaFormData(newFormData)
+    setVisitaVisible(true)
+  }
+
+  const handleSubmitVisita = () => {
+    if (!visitaFormData.departamento_id || !visitaFormData.motivo_visita.trim()) {
+      toast.current?.show({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'Por favor complete todos los campos requeridos',
+      })
+      return
+    }
+
+    createVisitaMutation.mutate(visitaFormData)
   }
 
   const handleCreate = () => {
@@ -401,7 +494,13 @@ const Visitantes: React.FC = () => {
 
   const actionBodyTemplate = (rowData: VisitanteType) => {
     return (
-      <div className="d-flex gap-2">
+      <div className="d-flex gap-2" style={{ minHeight: '40px', alignItems: 'center' }}>
+        <Button
+          icon="pi pi-calendar-plus"
+          className="p-button-rounded p-button-text p-button-sm p-button-info"
+          onClick={() => handleCreateVisita(rowData)}
+          tooltip="Nueva Visita"
+        />
         <Button
           icon="pi pi-pencil"
           className="p-button-rounded p-button-text p-button-sm"
@@ -771,6 +870,117 @@ const Visitantes: React.FC = () => {
             </div>
           </div>
         </div>
+      </Dialog>
+
+      {/* Modal de Nueva Visita */}
+      <Dialog
+        header={
+          <div className="d-flex align-items-center">
+            <i className="pi pi-calendar-plus me-2" style={{ color: '#001a79' }}></i>
+            <span>Nueva Visita</span>
+          </div>
+        }
+        visible={visitaVisible}
+        style={{ width: '50vw' }}
+        onHide={() => setVisitaVisible(false)}
+        modal
+        className="p-fluid"
+      >
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmitVisita(); }}>
+          <div className="p-4">
+            <div className="grid">
+              <div className="col-6 md:col-6">
+                <div className="field">
+                  <label htmlFor="visitante_id" className="font-semibold block mb-2">
+                    Visitante *
+                  </label>
+                  <InputText
+                    id="visitante_id"
+                    value={selectedVisitanteForVisita ? `${selectedVisitanteForVisita.nombre} ${selectedVisitanteForVisita.apellido}` : ''}
+                    disabled
+                    className="w-100"
+                  />
+                </div>
+              </div>
+
+              <div className="col-6 md:col-6">
+                <div className="field">
+                  <label htmlFor="departamento_id" className="font-semibold block mb-2">
+                    Departamento *
+                  </label>
+                  <Dropdown
+                    id="departamento_id"
+                    value={visitaFormData.departamento_id}
+                    options={departamentos.map(dep => ({ label: dep.nombre, value: dep.id }))}
+                    onChange={(e) => setVisitaFormData({ ...visitaFormData, departamento_id: e.value })}
+                    placeholder="Seleccione un departamento"
+                    filter
+                    filterBy="label"
+                    showClear
+                    className="w-100"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="col-12 md:col-12">
+                <div className="field">
+                  <label htmlFor="motivo_visita" className="font-semibold block mb-2">
+                    Motivo de la Visita *
+                  </label>
+                  <InputText
+                    id="motivo_visita"
+                    value={visitaFormData.motivo_visita}
+                    onChange={(e) => setVisitaFormData({ ...visitaFormData, motivo_visita: e.target.value })}
+                    placeholder="Ingrese el motivo de la visita"
+                    className="w-100"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="col-12 md:col-12">
+                <div className="field">
+                  <label htmlFor="observaciones" className="font-semibold block mb-2">
+                    Observaciones
+                  </label>
+                  <InputTextarea
+                    id="observaciones"
+                    value={visitaFormData.observaciones}
+                    onChange={(e) => setVisitaFormData({ ...visitaFormData, observaciones: e.target.value })}
+                    placeholder="Ingrese observaciones adicionales (opcional)"
+                    className="w-100"
+                    rows={3}
+                    autoResize
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-3" style={{ borderTop: '2px solid #f0f0f0' }}>
+              <div className="grid">
+                <div className="col-3 md:col-3 offset-md-3">
+                  <Button
+                    type="button"
+                    label="Cancelar"
+                    icon="pi pi-times"
+                    className="p-button-text w-100"
+                    onClick={() => setVisitaVisible(false)}
+                  />
+                </div>
+                <div className="col-3 md:col-3">
+                  <Button
+                    type="submit"
+                    label="Crear Visita"
+                    icon="pi pi-plus"
+                    className="w-100"
+                    loading={createVisitaMutation.isLoading}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
       </Dialog>
     </div>
   )

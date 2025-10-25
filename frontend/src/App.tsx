@@ -8,7 +8,6 @@ import Visitantes from './pages/Visitantes'
 import Departamentos from './pages/Departamentos'
 import Visitas from './pages/Visitas'
 import Reportes from './pages/Reportes'
-import Configuracion from './pages/Configuracion'
 import LoadingSpinner from './components/LoadingSpinner'
 
 function App() {
@@ -31,7 +30,6 @@ function App() {
         <Route path="/departamentos" element={<Departamentos />} />
         <Route path="/visitas" element={<Visitas />} />
         <Route path="/reportes" element={<Reportes />} />
-        <Route path="/configuracion" element={<Configuracion />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Layout>

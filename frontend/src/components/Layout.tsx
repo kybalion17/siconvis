@@ -115,15 +115,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               Reportes
             </CNavLink>
           </CNavItem>
-          <CNavItem>
-            <CNavLink 
-              onClick={() => handleNavigation('/configuracion')}
-              className={location.pathname === '/configuracion' ? 'active' : ''}
-            >
-              <CIcon icon="cil-settings" customClassName="nav-icon" />
-              Configuración
-            </CNavLink>
-          </CNavItem>
         </CSidebarNav>
         <CSidebarToggler />
       </CSidebar>

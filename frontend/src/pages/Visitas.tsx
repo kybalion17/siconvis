@@ -4,6 +4,7 @@ import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
+import { InputTextarea } from 'primereact/inputtextarea'
 import { Dropdown } from 'primereact/dropdown'
 import { Toast } from 'primereact/toast'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog'
@@ -26,6 +27,7 @@ interface VisitaForm {
   visitante_id: number
   departamento_id: number
   motivo_visita: string
+  observaciones?: string
 }
 
 const Visitas: React.FC = () => {
@@ -45,6 +47,7 @@ const Visitas: React.FC = () => {
     visitante_id: 0,
     departamento_id: 0,
     motivo_visita: '',
+    observaciones: '',
   })
 
   // Query client para invalidar queries
@@ -174,12 +177,31 @@ const Visitas: React.FC = () => {
     },
   })
 
+  const finalizarMutation = useMutation((id: number) => api.finalizarVisita(id), {
+    onSuccess: () => {
+      toast.current?.show({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Visita finalizada correctamente',
+      })
+      queryClient.invalidateQueries('visitas-page')
+    },
+    onError: (error: any) => {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: error.response?.data?.message || 'Error al finalizar visita',
+      })
+    },
+  })
+
   // Funciones auxiliares
   const resetForm = () => {
     setFormData({
       visitante_id: 0,
       departamento_id: 0,
       motivo_visita: '',
+      observaciones: '',
     })
     setSelectedVisita(null)
   }
@@ -209,6 +231,7 @@ const Visitas: React.FC = () => {
       visitante_id: visita.visitante_id,
       departamento_id: visita.departamento_id,
       motivo_visita: visita.motivo_visita,
+      observaciones: visita.observaciones || '',
     })
     setVisible(true)
   }
@@ -219,6 +242,15 @@ const Visitas: React.FC = () => {
       header: 'Confirmar eliminación',
       icon: 'pi pi-exclamation-triangle',
       accept: () => deleteMutation.mutate(id),
+    })
+  }
+
+  const handleFinalizar = (id: number) => {
+    confirmDialog({
+      message: '¿Está seguro de que desea finalizar esta visita?',
+      header: 'Confirmar finalización',
+      icon: 'pi pi-check-circle',
+      accept: () => finalizarMutation.mutate(id),
     })
   }
 
@@ -238,6 +270,16 @@ const Visitas: React.FC = () => {
     return visitante ? `${visitante.nombre} ${visitante.apellido}` : 'N/A'
   }
 
+  // Función para agregar datos del visitante a cada visita para búsqueda
+  const visitasConDatosVisitante = visitas.map(visita => {
+    const visitante = visitantes.find(v => v.id === visita.visitante_id)
+    return {
+      ...visita,
+      visitante_nombre: visitante ? `${visitante.nombre} ${visitante.apellido}` : '',
+      visitante_cedula: visitante ? visitante.cedula : ''
+    }
+  })
+
   const departamentoTemplate = (rowData: VisitaType) => {
     // Si los datos de departamentos aún no están cargados, mostrar loading
     if (departamentos.length === 0) {
@@ -254,19 +296,31 @@ const Visitas: React.FC = () => {
 
   const accionesTemplate = (rowData: VisitaType) => {
     return (
-      <div className="d-flex gap-2">
-        <Button
-          icon="pi pi-pencil"
-          className="p-button-rounded p-button-text p-button-sm"
-          onClick={() => handleEdit(rowData)}
-          tooltip="Editar"
-        />
-        <Button
-          icon="pi pi-trash"
-          className="p-button-rounded p-button-text p-button-danger p-button-sm"
-          onClick={() => handleDelete(rowData.id)}
-          tooltip="Eliminar"
-        />
+      <div className="d-flex gap-2" style={{ minHeight: '40px', alignItems: 'center' }}>
+        {rowData.estado === 'activa' && (
+          <Button
+            icon="pi pi-check"
+            className="p-button-rounded p-button-text p-button-success p-button-sm"
+            onClick={() => handleFinalizar(rowData.id)}
+            tooltip="Finalizar Visita"
+          />
+        )}
+        {rowData.estado === 'activa' && (
+          <Button
+            icon="pi pi-pencil"
+            className="p-button-rounded p-button-text p-button-sm"
+            onClick={() => handleEdit(rowData)}
+            tooltip="Editar"
+          />
+        )}
+        {rowData.estado === 'activa' && (
+          <Button
+            icon="pi pi-trash"
+            className="p-button-rounded p-button-text p-button-danger p-button-sm"
+            onClick={() => handleDelete(rowData.id)}
+            tooltip="Eliminar"
+          />
+        )}
       </div>
     )
   }
@@ -340,18 +394,18 @@ const Visitas: React.FC = () => {
             <InputText
               value={filters.global.value || ''}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({ ...filters, global: { value: e.target.value, matchMode: FilterMatchMode.CONTAINS } })}
-              placeholder="Buscar por motivo de visita..."
+              placeholder="Buscar por motivo de visita, nombre o cédula del visitante..."
               className="w-100"
             />
           </div>
           <DataTable
-            value={visitas}
+            value={visitasConDatosVisitante}
             paginator
             rows={10}
             rowsPerPageOptions={[5, 10, 25, 50]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} visitas"
-            globalFilterFields={['motivo_visita']}
+            globalFilterFields={['motivo_visita', 'visitante_nombre', 'visitante_cedula']}
             filters={filters}
             filterDisplay="row"
             emptyMessage="No se encontraron visitas"
@@ -471,6 +525,23 @@ const Visitas: React.FC = () => {
                     placeholder="Ingrese el motivo de la visita"
                     className="w-100"
                     required
+                  />
+                </div>
+              </div>
+
+              <div className="col-12 md:col-12">
+                <div className="field">
+                  <label htmlFor="observaciones" className="font-semibold block mb-2">
+                    Observaciones
+                  </label>
+                  <InputTextarea
+                    id="observaciones"
+                    value={formData.observaciones}
+                    onChange={(e) => setFormData({ ...formData, observaciones: e.target.value })}
+                    placeholder="Ingrese observaciones adicionales (opcional)"
+                    className="w-100"
+                    rows={3}
+                    autoResize
                   />
                 </div>
               </div>

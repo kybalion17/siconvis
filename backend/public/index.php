@@ -210,6 +210,12 @@ $routes = [
             'metricas' => 'GET'
         ]
     ],
+    'reportes' => [
+        'controller' => 'ReporteController',
+        'methods' => [
+            'generar' => 'POST'
+        ]
+    ],
     'maestros' => [
         'controller' => 'MaestroController',
         'methods' => [
@@ -295,7 +301,7 @@ if (!method_exists($controllerInstance, $method)) {
 }
 
 // Aplicar middleware de autenticación para rutas protegidas
-$protectedRoutes = ['visitantes', 'departamentos', 'dashboard', 'maestros', 'maestro', 'visitas'];
+$protectedRoutes = ['visitantes', 'departamentos', 'dashboard', 'maestros', 'maestro', 'visitas', 'reportes'];
 if (in_array($controller, $protectedRoutes)) {
     $authData = AuthMiddleware::handle();
     $_SESSION['user_id'] = $authData['user_id'];

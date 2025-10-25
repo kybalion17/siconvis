@@ -83,25 +83,35 @@ class VisitaController
                 Response::error('Datos inválidos', 400);
             }
 
+            // Debug: Log de los datos recibidos
+            error_log('🔍 Datos recibidos en VisitaController::store: ' . json_encode($input));
+
             // Validar datos
             $errors = $this->visitaModel->validate($input);
             if (!empty($errors)) {
+                error_log('🔍 Errores de validación: ' . json_encode($errors));
                 Response::error('Datos de validación incorrectos', 422, $errors);
             }
 
             // Verificar que el visitante existe
             $visitanteModel = new Visitante();
+            error_log('🔍 Buscando visitante con ID: ' . $input['visitante_id']);
             $visitante = $visitanteModel->find($input['visitante_id']);
             if (!$visitante) {
+                error_log('🔍 Visitante no encontrado con ID: ' . $input['visitante_id']);
                 Response::error('Visitante no encontrado', 404);
             }
+            error_log('🔍 Visitante encontrado: ' . json_encode($visitante));
 
             // Verificar que el departamento existe
             $departamentoModel = new Departamento();
+            error_log('🔍 Buscando departamento con ID: ' . $input['departamento_id']);
             $departamento = $departamentoModel->find($input['departamento_id']);
             if (!$departamento) {
+                error_log('🔍 Departamento no encontrado con ID: ' . $input['departamento_id']);
                 Response::error('Departamento no encontrado', 404);
             }
+            error_log('🔍 Departamento encontrado: ' . json_encode($departamento));
 
             // Verificar si el visitante ya tiene una visita activa
             if ($this->visitaModel->visitanteTieneVisitaActiva($input['visitante_id'])) {
@@ -113,17 +123,24 @@ class VisitaController
                 'visitante_id' => $input['visitante_id'],
                 'departamento_id' => $input['departamento_id'],
                 'motivo_visita' => $input['motivo_visita'],
-                'fecha_entrada' => null, // Se establecerá automáticamente con NOW() en la base de datos
                 'estado' => 'activa',
                 'observaciones' => $input['observaciones'] ?? null,
                 'eliminado' => 0
             ];
+            // No incluir fecha_entrada para que use el valor por defecto de la base de datos
+
+            error_log('🔍 Datos para crear visita: ' . json_encode($visitaData));
 
             $visitaId = $this->visitaModel->create($visitaData);
+            error_log('🔍 Visita creada con ID: ' . $visitaId);
+            
             $visita = $this->visitaModel->find($visitaId);
+            error_log('🔍 Visita creada: ' . json_encode($visita));
 
             Response::success($visita, 'Visita registrada exitosamente', 201);
         } catch (\Exception $e) {
+            error_log('🔍 ERROR en VisitaController::store: ' . $e->getMessage());
+            error_log('🔍 Stack trace: ' . $e->getTraceAsString());
             Response::error('Error al registrar visita: ' . $e->getMessage(), 500);
         }
     }
@@ -203,14 +220,21 @@ class VisitaController
     /**
      * Finalizar visita
      */
-    public function finalizarVisita($id): void
+    public function finalizar($id): void
     {
         try {
+            $input = json_decode(file_get_contents('php://input'), true);
+            $observaciones = $input['observaciones'] ?? null;
+            
+            error_log('🔍 FinalizarVisita llamado con ID: ' . $id);
+            
             if (!$id) {
                 Response::error('ID de visita requerido', 400);
             }
 
             $visita = $this->visitaModel->find($id);
+            error_log('🔍 Visita encontrada: ' . json_encode($visita));
+            
             if (!$visita) {
                 Response::error('Visita no encontrada', 404);
             }
@@ -219,16 +243,18 @@ class VisitaController
                 Response::error('Solo se pueden finalizar visitas activas', 400);
             }
 
-            $input = json_decode(file_get_contents('php://input'), true);
-            $observaciones = $input['observaciones'] ?? null;
+            error_log('🔍 Observaciones: ' . $observaciones);
 
             $success = $this->visitaModel->finalizarVisita($id, $observaciones);
+            error_log('🔍 Resultado finalizar: ' . ($success ? 'true' : 'false'));
+            
             if (!$success) {
                 Response::error('No se pudo finalizar la visita', 500);
             }
 
             Response::success([], 'Visita finalizada exitosamente');
         } catch (\Exception $e) {
+            error_log('🔍 ERROR en finalizarVisita: ' . $e->getMessage());
             Response::error('Error al finalizar visita: ' . $e->getMessage(), 500);
         }
     }

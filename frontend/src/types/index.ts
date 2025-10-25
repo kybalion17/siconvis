@@ -188,7 +188,8 @@ export interface DepartamentoForm {
 }
 
 export interface VisitaForm {
-  visitantes_id: number
-  departamentos_id: number
+  visitante_id: number
+  departamento_id: number
   motivo_visita: string
+  observaciones?: string
 }
