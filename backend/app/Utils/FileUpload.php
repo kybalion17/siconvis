@@ -361,7 +361,7 @@ class FileUpload
     private static function getPublicUrl(string $relativePath): string
     {
         $config = require __DIR__ . '/../../config/app.php';
-        $baseUrl = $config['url'] ?? 'http://localhost:8000';
+        $baseUrl = $config['url'];
         $baseUrl = rtrim($baseUrl, '/');
         
         // Usar el método alternativo que funciona con el servidor PHP integrado
