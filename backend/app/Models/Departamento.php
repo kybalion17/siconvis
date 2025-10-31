@@ -14,7 +14,8 @@ class Departamento extends BaseModel
         'responsable',
         'telefono_primario',
         'telefono_secundario',
-        'status'
+        'status',
+        'eliminado'
     ];
     
     protected array $hidden = [];
