@@ -20,6 +20,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { useAuth } from '../hooks/useAuth'
+import bannerSiconvis from '../../images/bannerSiconvis.jpg'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -57,7 +58,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <CSidebarBrand className="d-none d-md-flex">
           <div className="w-100 d-flex flex-column align-items-center">
             <img 
-              src="/bannerSiconvis.png"
+              src={bannerSiconvis}
               alt="SICONVIS"
               style={{
                 width: '100%',

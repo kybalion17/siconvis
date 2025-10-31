@@ -20,6 +20,7 @@ import { Password } from 'primereact/password'
 import { Button } from 'primereact/button'
 // removed unused Toast import
 import { Divider } from 'primereact/divider'
+import bannerSiconvis from '../../images/bannerSiconvis.jpg'
 import CIcon from '@coreui/icons-react'
 // using static path from publicDir
 
@@ -94,7 +95,7 @@ const Login: React.FC = () => {
 				
 				<div className="mb-3"> 
 					<img
-						src="/bannerSiconvis.png"
+						src={bannerSiconvis}
 						alt="SICONVIS"
 						className="img-fluid d-block mx-auto"
 						style={{ 

@@ -14,6 +14,7 @@ import CIcon from '@coreui/icons-react'
 import { useAuth } from '../hooks/useAuth'
 import api from '../services/api'
 import { DashboardStats } from '../types'
+import logoHeader from '../../images/logo_header.jpg'
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth()
@@ -62,12 +63,13 @@ const Dashboard: React.FC = () => {
     <div className="dashboard-container">
       <div className="mb-4">
         <img
-          src="/logo_header.jpg"
+          src={logoHeader}
           alt="SICONVIS"
           style={{
             width: '100%',
-            maxHeight: '220px',
+            height: '300px',
             objectFit: 'cover',
+            objectPosition: 'center',
             borderRadius: '8px',
             border: '1px solid var(--police-blue-light)'
           }}
